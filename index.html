@@ -933,5 +933,15 @@ window.addEventListener('DOMContentLoaded', ()=>{
   }, 1000);
 });
 </script>
+  <link rel="manifest" href="manifest.json">
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js')
+        .then(reg => console.log('Offline Protocol Active'))
+        .catch(err => console.log('Offline Protocol Failed', err));
+    });
+  }
+</script>
 </body>
 </html>
