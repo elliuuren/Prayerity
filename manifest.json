@@ -1,0 +1,17 @@
+{
+  "name": "Prayerity OS",
+  "short_name": "Prayerity",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#030305",
+  "theme_color": "#00f2ff",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2583/2583217.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
