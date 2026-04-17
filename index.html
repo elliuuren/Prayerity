@@ -74,6 +74,7 @@ nav{position:fixed;bottom:0;left:0;right:0;background:rgba(3,3,5,.95);backdrop-f
 /* PRAYER CARDS */
 .prayer-card{margin:.5rem 1rem;background:var(--card);border:1px solid var(--border);border-radius:14px; overflow-y-auto;transition:border-color .2s;}
 .prayer-card.completed{border-color:rgba(0,242,255,.35);}
+.prayer-card:hover { transform: translateY(-5px) scale(1.03); box-shadow: 0 5px 30px rgba(0, 210, 255, 0.4); }
 .prayer-header{display:flex;align-items:center;gap:.75rem;padding:.9rem 1.1rem;cursor:pointer;position:relative;}
 .prayer-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
 .prayer-name{font-family:'Syncopate',sans-serif;font-size:.72rem;letter-spacing:.15em;flex:1;}
@@ -109,6 +110,7 @@ nav{position:fixed;bottom:0;left:0;right:0;background:rgba(3,3,5,.95);backdrop-f
 .sync-btn:active::before{opacity:1;}
 .sync-btn:active{transform:scale(.99);}
 .sync-btn:disabled{opacity:.4;cursor:not-allowed;}
+.sync-btn:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 10px 30px rgba(0, 210, 255, 0.4); }
 
 /* LOCK SCREEN */
 .lock-screen{margin:1rem;background:var(--card);border:1px solid rgba(188,19,254,.25);border-radius:16px;padding:2.5rem 1.5rem;text-align:center;}
@@ -125,6 +127,7 @@ nav{position:fixed;bottom:0;left:0;right:0;background:rgba(3,3,5,.95);backdrop-f
 .manual-title{font-family:'Syncopate',sans-serif;font-size:.85rem;letter-spacing:.2em;color:var(--purple);margin-bottom:.25rem;}
 .manual-sub{font-size:.75rem;color:var(--muted);}
 .archive-card{margin:.5rem 1rem;background:var(--card);border:1px solid var(--border);border-radius:14px; overflow-y-auto;}
+.archive-card:hover { transform: translateY(-5px) scale(1.03); box-shadow: 0 5px 30px rgba(0, 210, 255, 0.4); }
 .archive-header{display:flex;align-items:center;gap:.75rem;padding:.9rem 1.1rem;cursor:pointer;}
 .archive-icon{width:32px;height:32px;background:linear-gradient(135deg,rgba(0,242,255,.15),rgba(188,19,254,.15));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;}
 .archive-name{font-family:'Syncopate',sans-serif;font-size:.7rem;letter-spacing:.15em;flex:1;}
@@ -456,8 +459,7 @@ const PRAYERS = [
       {id:'fajr_ontime',label:'On Time',mandatory:false,xp:40},
       {id:'fajr_jamah',label:'Jamah (Congregation)',mandatory:false,xp:50},
       {id:'fajr_mosque',label:'Mosque',mandatory:false,xp:50},
-      {id:'fajr_late',label:'Late',mandatory:false,xp:30},
-      {id:'fajr_kadha',label:'Kadha (Makeup)',mandatory:false,xp:30},
+      
     ]
   },
   {
@@ -469,8 +471,6 @@ const PRAYERS = [
       {id:'dhuhr_ontime',label:'On Time',mandatory:false,xp:40},
       {id:'dhuhr_jamah',label:'Jamah (Congregation)',mandatory:false,xp:50},
       {id:'dhuhr_mosque',label:'Mosque',mandatory:false,xp:50},
-      {id:'dhuhr_late',label:'Late',mandatory:false,xp:30},
-      {id:'dhuhr_kadha',label:'Kadha (Makeup)',mandatory:false,xp:30},
     ]
   },
   {
@@ -481,8 +481,6 @@ const PRAYERS = [
       {id:'asr_ontime',label:'On Time',mandatory:false,xp:40},
       {id:'asr_jamah',label:'Jamah (Congregation)',mandatory:false,xp:50},
       {id:'asr_mosque',label:'Mosque',mandatory:false,xp:50},
-      {id:'asr_late',label:'Late',mandatory:false,xp:30},
-      {id:'asr_kadha',label:'Kadha (Makeup)',mandatory:false,xp:30},
     ]
   },
   {
@@ -493,8 +491,6 @@ const PRAYERS = [
       {id:'maghrib_ontime',label:'On Time',mandatory:false,xp:40},
       {id:'maghrib_jamah',label:'Jamah (Congregation)',mandatory:false,xp:50},
       {id:'maghrib_mosque',label:'Mosque',mandatory:false,xp:50},
-      {id:'maghrib_late',label:'Late',mandatory:false,xp:30},
-      {id:'maghrib_kadha',label:'Kadha (Makeup)',mandatory:false,xp:30},
     ]
   },
   {
@@ -505,8 +501,6 @@ const PRAYERS = [
       {id:'isha_ontime',label:'On Time',mandatory:false,xp:40},
       {id:'isha_jamah',label:'Jamah (Congregation)',mandatory:false,xp:50},
       {id:'isha_mosque',label:'Mosque',mandatory:false,xp:50},
-      {id:'isha_late',label:'Late',mandatory:false,xp:30},
-      {id:'isha_kadha',label:'Kadha (Makeup)',mandatory:false,xp:30},
     ]
   },
   {
@@ -514,7 +508,7 @@ const PRAYERS = [
     tasks:[
       {id:'witr_w3',label:'Waazib (3 Rak\'ah)',mandatory:true,xp:0},
       {id:'witr_ontime',label:'On Time',mandatory:false,xp:40},
-      {id:'witr_late',label:'Late',mandatory:false,xp:30},
+
     ]
   }
 ];
@@ -933,7 +927,7 @@ window.addEventListener('DOMContentLoaded', ()=>{
   }, 1000);
 });
 </script>
-  <link rel="manifest" href="manifest.json">
+<link rel="manifest" href="manifest.json">
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
