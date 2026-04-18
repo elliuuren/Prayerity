@@ -2,426 +2,759 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover,maximum-scale=1.0">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#030305">
-<title>PRAYERITY OS v4.3</title>
+<title>PRAYERITY OS v5.0</title>
 <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 <style>
-:root{--cyan:#00f2ff;--purple:#bc13fe;--bg:#030305;--card:rgba(255,255,255,0.04);--border:rgba(0,242,255,0.15);--text:#e2e8f0;--muted:#94a3b8;--danger:#ff4757;--gold:#ffd700;}
+/* ══════════════════════════════════════════════
+   ROOT VARIABLES & THEMES
+══════════════════════════════════════════════ */
+:root{
+  --cyan:#00f2ff;--purple:#bc13fe;--bg:#030305;--bg2:#0a0a12;--bg3:#0d0d18;
+  --card:rgba(255,255,255,0.04);--card2:rgba(255,255,255,0.07);
+  --border:rgba(0,242,255,0.15);--border2:rgba(255,255,255,0.08);
+  --text:#e2e8f0;--muted:#94a3b8;--danger:#ff4757;--gold:#ffd700;--green:#00ff88;
+  --font-head:'Syncopate',sans-serif;--font-body:'Outfit',sans-serif;
+  --r8:8px;--r12:12px;--r16:16px;
+  --glow-cyan:0 0 20px rgba(0,242,255,0.15);
+  --glow-purple:0 0 20px rgba(188,19,254,0.15);
+  --trans:all 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+[data-theme="day"]{
+  --bg:#f0f4ff;--bg2:#e8eeff;--bg3:#dce4ff;
+  --card:rgba(0,0,0,0.04);--card2:rgba(0,0,0,0.07);
+  --border:rgba(0,100,200,0.2);--border2:rgba(0,0,0,0.08);
+  --text:#0a0a1a;--muted:#4a5568;
+}
+[data-theme="auto"]{color-scheme:light dark;}
+
+/* ══════════════════════════════════════════════
+   RESET & BASE
+══════════════════════════════════════════════ */
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;user-select:none;-webkit-user-select:none;}
-html,body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;overflow-y-auto;min-height:100dvh;overscroll-behavior:none;}
+html,body{background:var(--bg);color:var(--text);font-family:var(--font-body);overflow-x:hidden;min-height:100dvh;overscroll-behavior:none;transition:background 0.4s,color 0.4s;}
 ::-webkit-scrollbar{display:none;}
-scrollbar-width:none;
+input,textarea{user-select:text;-webkit-user-select:text;}
+a{color:inherit;text-decoration:none;}
 
-/* BOOT LOADER */
-#boot{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;}
-#boot.fade-out{animation:bootFade .6s ease forwards;}
+/* ══════════════════════════════════════════════
+   BOOT LOADER
+══════════════════════════════════════════════ */
+#boot{position:fixed;inset:0;background:#030305;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;}
+#boot.fade-out{animation:bootFade 0.7s ease forwards;}
 @keyframes bootFade{to{opacity:0;pointer-events:none;}}
-.boot-logo{font-family:'Syncopate',sans-serif;font-size:clamp(1.4rem,6vw,2.2rem);font-weight:700;letter-spacing:.15em;background:linear-gradient(135deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-align:center;}
-.boot-sub{font-size:.7rem;letter-spacing:.4em;color:var(--muted);font-family:'Syncopate',sans-serif;text-transform:uppercase;}
-.boot-bar-wrap{width:260px;height:2px;background:rgba(255,255,255,0.06);border-radius:2px; overflow-y-auto;}
-.boot-bar{height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--purple));animation:bootLoad 2.2s cubic-bezier(.4,0,.2,1) forwards;}
-@keyframes bootLoad{0%{width:0}60%{width:70%}80%{width:88%}100%{width:100%}}
-.boot-scan{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,242,255,.015) 2px,rgba(0,242,255,.015) 4px);pointer-events:none;}
-.boot-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 40%,rgba(3,3,5,.85) 100%);pointer-events:none;}
-.boot-status{font-size:.65rem;color:var(--cyan);letter-spacing:.2em;font-family:'Syncopate',sans-serif;opacity:.7;}
+.boot-logo{font-family:var(--font-head);font-size:clamp(1.6rem,7vw,2.4rem);font-weight:700;letter-spacing:.15em;background:linear-gradient(135deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-align:center;animation:bootPulse 1.5s ease-in-out infinite;}
+@keyframes bootPulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.3)}}
+.boot-version{font-family:var(--font-head);font-size:.6rem;letter-spacing:.4em;color:#4a5568;margin-top:.3rem;text-align:center;}
+.boot-bar-wrap{width:280px;height:2px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;}
+.boot-bar{height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--purple));animation:bootLoad 2.1s cubic-bezier(.4,0,.2,1) forwards;}
+@keyframes bootLoad{0%{width:0}60%{width:72%}85%{width:90%}100%{width:100%}}
+.boot-status{font-family:var(--font-head);font-size:.6rem;color:var(--cyan);letter-spacing:.2em;opacity:.8;min-height:1em;text-align:center;}
+.boot-scan{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,242,255,.012) 2px,rgba(0,242,255,.012) 4px);pointer-events:none;animation:scanMove 8s linear infinite;}
+@keyframes scanMove{from{background-position:0 0}to{background-position:0 100px}}
+.boot-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 40%,rgba(3,3,5,.9) 100%);pointer-events:none;}
 
-/* APP SHELL */
+/* ══════════════════════════════════════════════
+   APP SHELL
+══════════════════════════════════════════════ */
 #app{display:none;min-height:100dvh;flex-direction:column;}
 #app.visible{display:flex;}
 
-/* NAV */
-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(3,3,5,.95);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom);}
-.nav-btn{flex:1;padding:.9rem .5rem .7rem;display:flex;flex-direction:column;align-items:center;gap:.25rem;background:none;border:none;color:var(--muted);cursor:pointer;transition:color .2s;font-family:'Outfit',sans-serif;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;}
+/* ══════════════════════════════════════════════
+   NAV BAR
+══════════════════════════════════════════════ */
+nav{position:fixed;bottom:0;left:0;right:0;background:rgba(3,3,5,.97);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid var(--border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom);}
+[data-theme="day"] nav{background:rgba(240,244,255,.97);}
+.nav-btn{flex:1;padding:.85rem .25rem .65rem;display:flex;flex-direction:column;align-items:center;gap:.2rem;background:none;border:none;color:var(--muted);cursor:pointer;transition:var(--trans);font-family:var(--font-head);font-size:.48rem;letter-spacing:.1em;text-transform:uppercase;position:relative;}
+.nav-btn svg{width:18px;height:18px;stroke-width:1.5;transition:var(--trans);}
 .nav-btn.active{color:var(--cyan);}
-.nav-btn svg{width:20px;height:20px;stroke-width:1.5;}
-.nav-indicator{width:4px;height:4px;border-radius:50%;background:var(--cyan);opacity:0;transition:opacity .2s;}
-.nav-btn.active .nav-indicator{opacity:1;}
+.nav-btn.active svg{filter:drop-shadow(0 0 4px var(--cyan));}
+.nav-btn::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:0;height:2px;background:linear-gradient(90deg,var(--cyan),var(--purple));border-radius:2px 2px 0 0;transition:width .3s;}
+.nav-btn.active::after{width:60%;}
+.nav-btn:active{transform:scale(.92);}
 
-/* HEADER */
-.app-header{padding:3.5rem 1.25rem 1rem;background:linear-gradient(180deg,rgba(0,242,255,.04) 0%,transparent 100%);}
-.header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem;}
-.app-title{font-family:'Syncopate',sans-serif;font-size:1rem;font-weight:700;letter-spacing:.2em;color:var(--cyan);}
-.version-badge{font-size:.55rem;background:rgba(188,19,254,.15);border:1px solid rgba(188,19,254,.3);color:var(--purple);padding:.2rem .5rem;border-radius:20px;font-family:'Syncopate',sans-serif;letter-spacing:.1em;}
+/* ══════════════════════════════════════════════
+   HEADER
+══════════════════════════════════════════════ */
+.app-header{padding:3.5rem 1.25rem 1rem;background:linear-gradient(180deg,rgba(0,242,255,.05) 0%,transparent 100%);}
+.header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.4rem;}
+.app-title{font-family:var(--font-head);font-size:.95rem;font-weight:700;letter-spacing:.22em;color:var(--cyan);}
+.version-badge{font-size:.5rem;background:rgba(188,19,254,.15);border:1px solid rgba(188,19,254,.3);color:var(--purple);padding:.2rem .55rem;border-radius:20px;font-family:var(--font-head);letter-spacing:.1em;}
+.header-sub{font-size:.7rem;color:var(--muted);}
 
-/* XP PANEL */
-.xp-panel{margin:0 1rem 1rem;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1rem 1.25rem;position:relative; overflow-y-auto;}
+/* ══════════════════════════════════════════════
+   XP & LEVEL PANEL
+══════════════════════════════════════════════ */
+.xp-panel{margin:0 1rem .9rem;background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:1rem 1.2rem;position:relative;overflow:hidden;transition:box-shadow .3s;}
 .xp-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);}
-.xp-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem;}
-.xp-label{font-size:.65rem;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;}
-.xp-value{font-family:'Syncopate',sans-serif;font-size:.9rem;color:var(--cyan);}
-.xp-bar-bg{height:6px;background:rgba(255,255,255,.06);border-radius:6px; overflow-y-auto;}
-.xp-bar-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--cyan),var(--purple));position:relative;transition:width .6s cubic-bezier(.4,0,.2,1);}
-.xp-bar-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.4) 50%,transparent 100%);background-size:200% 100%;animation:shimmer 2s infinite;}
+.level-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem;}
+.level-badge{display:flex;align-items:center;gap:.5rem;}
+.level-num{font-family:var(--font-head);font-size:1.1rem;color:var(--cyan);line-height:1;}
+.level-info{display:flex;flex-direction:column;}
+.level-name{font-family:var(--font-head);font-size:.55rem;letter-spacing:.15em;background:linear-gradient(135deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.level-label{font-size:.55rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;}
+.xp-right{text-align:right;}
+.xp-total{font-family:var(--font-head);font-size:.75rem;color:var(--cyan);}
+.xp-next{font-size:.6rem;color:var(--muted);}
+.xp-bar-bg{height:5px;background:rgba(255,255,255,.06);border-radius:6px;overflow:hidden;margin-bottom:.85rem;}
+.xp-bar-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--cyan),var(--purple));position:relative;transition:width .7s cubic-bezier(.4,0,.2,1);}
+.xp-bar-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.45) 50%,transparent 100%);background-size:200% 100%;animation:shimmer 2.5s infinite;}
 @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
-.stats-row{display:flex;gap:.75rem;margin-top:.85rem;}
-.stat-chip{flex:1;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:.5rem .6rem;text-align:center;}
-.stat-chip-val{font-family:'Syncopate',sans-serif;font-size:.85rem;display:block;}
-.stat-chip-val.cyan{color:var(--cyan);}
-.stat-chip-val.purple{color:var(--purple);}
-.stat-chip-val.gold{color:var(--gold);}
-.stat-chip-lbl{font-size:.55rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;display:block;margin-top:.1rem;}
+.stats-row{display:flex;gap:.6rem;}
+.stat-chip{flex:1;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:var(--r8);padding:.45rem .5rem;text-align:center;transition:var(--trans);}
+.stat-chip:active{background:rgba(255,255,255,.06);}
+.stat-v{font-family:var(--font-head);font-size:.8rem;display:block;}
+.stat-l{font-size:.5rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;display:block;margin-top:.1rem;}
+.c-cyan{color:var(--cyan);}
+.c-purple{color:var(--purple);}
+.c-gold{color:var(--gold);}
+.c-green{color:var(--green);}
 
-/* PAGE */
-.page{display:none;flex:1;overflow-y:auto;padding-bottom:calc(70px + env(safe-area-inset-bottom));}
-.page.active{display:block;}
+/* ══════════════════════════════════════════════
+   DATE NAVIGATOR
+══════════════════════════════════════════════ */
+.date-nav{display:flex;align-items:center;gap:.5rem;margin:0 1rem .75rem;background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:.55rem .75rem;}
+.date-nav-btn{width:28px;height:28px;border-radius:6px;background:rgba(255,255,255,.05);border:1px solid var(--border2);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--trans);flex-shrink:0;}
+.date-nav-btn:active{background:rgba(0,242,255,.1);color:var(--cyan);}
+.date-nav-btn:disabled{opacity:.25;pointer-events:none;}
+.date-nav-center{flex:1;text-align:center;}
+.date-nav-str{font-family:var(--font-head);font-size:.62rem;letter-spacing:.12em;color:var(--text);}
+.date-nav-dot{width:6px;height:6px;border-radius:50%;margin:.2rem auto 0;transition:var(--trans);}
+.date-nav-dot.today{background:var(--cyan);}
+.date-nav-dot.past{background:rgba(255,215,0,.6);}
+.date-nav-dot.synced{background:var(--green);}
 
-/* PRAYER CARDS */
-.prayer-card{margin:.5rem 1rem;background:var(--card);border:1px solid var(--border);border-radius:14px; overflow-y-auto;transition:border-color .2s;}
-.prayer-card.completed{border-color:rgba(0,242,255,.35);}
-.prayer-card:hover { transform: translateY(-5px) scale(1.03); box-shadow: 0 5px 30px rgba(0, 210, 255, 0.4); }
-.prayer-header{display:flex;align-items:center;gap:.75rem;padding:.9rem 1.1rem;cursor:pointer;position:relative;}
-.prayer-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
-.prayer-name{font-family:'Syncopate',sans-serif;font-size:.72rem;letter-spacing:.15em;flex:1;}
-.prayer-xp-badge{font-size:.6rem;background:rgba(0,242,255,.1);border:1px solid rgba(0,242,255,.2);color:var(--cyan);padding:.2rem .5rem;border-radius:20px;font-family:'Syncopate',sans-serif;}
-.prayer-progress{width:32px;height:32px;position:relative;}
+/* ══════════════════════════════════════════════
+   PRAYER CARDS
+══════════════════════════════════════════════ */
+.section-div{display:flex;align-items:center;gap:.6rem;padding:.2rem 1.25rem .5rem;margin-top:.1rem;}
+.section-div-line{flex:1;height:1px;background:rgba(255,255,255,.05);}
+.section-div-text{font-family:var(--font-head);font-size:.5rem;letter-spacing:.25em;color:var(--muted);}
+
+.prayer-card{margin:.45rem 1rem;background:var(--card);border:1px solid var(--border2);border-radius:var(--r16);overflow:hidden;transition:var(--trans),box-shadow .3s;opacity:0;transform:translateY(12px);}
+.prayer-card.revealed{opacity:1;transform:translateY(0);}
+.prayer-card:hover{box-shadow:0 4px 24px rgba(0,242,255,.07);}
+.prayer-card.completed{border-color:rgba(0,242,255,.3);box-shadow:0 0 16px rgba(0,242,255,.06);}
+.prayer-card.missed{border-color:rgba(255,71,87,.25);}
+
+.prayer-header{display:flex;align-items:center;gap:.65rem;padding:.85rem 1rem;cursor:pointer;position:relative;}
+.prayer-icon{width:34px;height:34px;border-radius:var(--r8);display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0;transition:var(--trans);}
+.prayer-name{font-family:var(--font-head);font-size:.68rem;letter-spacing:.15em;flex:1;}
+.prayer-xp-badge{font-size:.55rem;background:rgba(0,242,255,.08);border:1px solid rgba(0,242,255,.18);color:var(--cyan);padding:.18rem .45rem;border-radius:20px;font-family:var(--font-head);white-space:nowrap;}
+.prayer-progress{position:relative;width:30px;height:30px;flex-shrink:0;}
 .prayer-progress svg{transform:rotate(-90deg);}
-.prayer-progress circle{transition:stroke-dashoffset .4s ease;stroke-linecap:round;}
-.progress-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.55rem;font-weight:600;color:var(--cyan);}
-.chevron{color:var(--muted);transition:transform .3s;margin-left:.25rem;}
-.chevron.open{transform:rotate(180deg);}
+.pp-bg{stroke:rgba(255,255,255,.06);}
+.pp-fill{transition:stroke-dashoffset .5s cubic-bezier(.4,0,.2,1);stroke-linecap:round;}
+.progress-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.5rem;font-weight:600;color:var(--cyan);}
+.chevron-btn{color:var(--muted);transition:transform .3s;margin-left:.2rem;flex-shrink:0;}
+.chevron-btn.open{transform:rotate(180deg);}
 
-/* TASK ITEMS */
-.tasks-body{padding:.25rem .75rem .85rem;border-top:1px solid rgba(255,255,255,.04);}
-.task-group{margin-top:.6rem;}
-.task-group-label{font-size:.55rem;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;padding:.1rem .35rem;margin-bottom:.35rem;}
-.task-item{display:flex;align-items:center;gap:.6rem;padding:.55rem .4rem;border-radius:8px;cursor:pointer;transition:background .15s;position:relative;}
-.task-item:active{background:rgba(255,255,255,.04);}
-.task-check{width:20px;height:20px;border-radius:5px;border:1.5px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;}
+.tasks-body{padding:.25rem .75rem .8rem;border-top:1px solid rgba(255,255,255,.04);}
+.task-group{margin-top:.55rem;}
+.task-group-lbl{font-size:.52rem;letter-spacing:.2em;color:var(--muted);padding:.05rem .35rem;margin-bottom:.3rem;font-family:var(--font-head);}
+
+.task-item{display:flex;align-items:center;gap:.55rem;padding:.5rem .35rem;border-radius:8px;cursor:pointer;transition:background .15s,transform .1s;position:relative;overflow:hidden;}
+.task-item::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,.03);opacity:0;transition:opacity .15s;}
+.task-item:active::after{opacity:1;}
+.task-item:active{transform:scale(.99);}
+
+.task-check{width:20px;height:20px;border-radius:5px;border:1.5px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s cubic-bezier(.34,1.56,.64,1);}
 .task-check.mandatory{border-color:rgba(188,19,254,.4);}
-.task-check.checked{background:var(--cyan);border-color:var(--cyan);}
+.task-check.checked{background:var(--cyan);border-color:var(--cyan);transform:scale(1.1);}
 .task-check.checked.mandatory{background:var(--purple);border-color:var(--purple);}
-.task-check svg{opacity:0;transition:opacity .15s;width:12px;height:12px;}
+.task-check svg{opacity:0;transition:opacity .15s;width:11px;height:11px;}
 .task-check.checked svg{opacity:1;}
-.task-label{font-size:.8rem;color:var(--text);flex:1;line-height:1.3;}
-.task-label .mandatory-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--purple);margin-left:.3rem;vertical-align:middle;}
-.task-xp{font-size:.6rem;color:var(--cyan);font-family:'Syncopate',sans-serif;opacity:.6;}
-.task-xp.mandatory-lbl{color:var(--purple);}
+.task-label{font-size:.78rem;color:var(--text);flex:1;line-height:1.3;}
+.m-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--purple);margin-left:.3rem;vertical-align:middle;}
+.task-xp{font-size:.58rem;color:var(--cyan);font-family:var(--font-head);opacity:.6;white-space:nowrap;}
+.task-xp.m-lbl{color:var(--purple);}
 
-/* SYNC BUTTON */
-.sync-section{padding:1rem 1rem .5rem;}
-.sync-btn{width:100%;padding:1rem;background:linear-gradient(135deg,rgba(0,242,255,.1),rgba(188,19,254,.1));border:1px solid rgba(0,242,255,.3);border-radius:14px;color:var(--cyan);font-family:'Syncopate',sans-serif;font-size:.75rem;letter-spacing:.2em;cursor:pointer;transition:all .25s;position:relative; overflow-y-auto;}
-.sync-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,242,255,.05),rgba(188,19,254,.05));opacity:0;transition:opacity .2s;}
-.sync-btn:active::before{opacity:1;}
+/* ══════════════════════════════════════════════
+   SYNC BUTTON
+══════════════════════════════════════════════ */
+.sync-section{padding:.75rem 1rem .4rem;}
+.sync-btn{width:100%;padding:.95rem;background:linear-gradient(135deg,rgba(0,242,255,.08),rgba(188,19,254,.08));border:1px solid rgba(0,242,255,.25);border-radius:var(--r12);color:var(--cyan);font-family:var(--font-head);font-size:.7rem;letter-spacing:.2em;cursor:pointer;transition:var(--trans);position:relative;overflow:hidden;}
+.sync-btn::before{content:'';position:absolute;top:50%;left:50%;width:0;height:0;background:rgba(0,242,255,.08);border-radius:50%;transform:translate(-50%,-50%);transition:width .5s,height .5s;}
+.sync-btn:active::before{width:400px;height:400px;}
 .sync-btn:active{transform:scale(.99);}
-.sync-btn:disabled{opacity:.4;cursor:not-allowed;}
-.sync-btn:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 10px 30px rgba(0, 210, 255, 0.4); }
+.sync-btn:disabled{opacity:.35;cursor:not-allowed;}
 
-/* LOCK SCREEN */
-.lock-screen{margin:1rem;background:var(--card);border:1px solid rgba(188,19,254,.25);border-radius:16px;padding:2.5rem 1.5rem;text-align:center;}
-.lock-icon{font-size:2.5rem;margin-bottom:1rem;display:block;}
-.lock-title{font-family:'Syncopate',sans-serif;font-size:.85rem;letter-spacing:.2em;color:var(--purple);margin-bottom:.5rem;}
-.lock-sub{font-size:.8rem;color:var(--muted);line-height:1.6;}
-.lock-timer{font-family:'Syncopate',sans-serif;font-size:1.4rem;color:var(--cyan);margin:1.2rem 0 .4rem;letter-spacing:.15em;}
-.lock-timer-label{font-size:.6rem;color:var(--muted);letter-spacing:.2em;text-transform:uppercase;}
-.lock-progress-bar{height:3px;background:rgba(255,255,255,.06);border-radius:3px;margin:.9rem 0; overflow-y-auto;}
-.lock-progress-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--cyan));transition:width .5s;}
+/* ══════════════════════════════════════════════
+   LOCK SCREEN
+══════════════════════════════════════════════ */
+.lock-screen-wrap{margin:.5rem 1rem;}
+.lock-screen{background:var(--card);border:1px solid rgba(188,19,254,.25);border-radius:var(--r16);padding:2rem 1.5rem;text-align:center;position:relative;overflow:hidden;}
+.lock-screen::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center top,rgba(188,19,254,.06),transparent 70%);pointer-events:none;}
+.lock-icon-big{font-size:2.2rem;display:block;margin-bottom:.9rem;animation:lockFloat 3s ease-in-out infinite;}
+@keyframes lockFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.lock-title{font-family:var(--font-head);font-size:.8rem;letter-spacing:.2em;color:var(--purple);margin-bottom:.45rem;}
+.lock-sub{font-size:.75rem;color:var(--muted);line-height:1.6;}
+.lock-timer-big{font-family:var(--font-head);font-size:1.5rem;letter-spacing:.15em;color:var(--cyan);margin:1rem 0 .3rem;}
+.lock-timer-lbl{font-size:.55rem;color:var(--muted);letter-spacing:.2em;text-transform:uppercase;}
+.lock-prog-bg{height:3px;background:rgba(255,255,255,.06);border-radius:3px;margin:.8rem 0;overflow:hidden;}
+.lock-prog-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--cyan));transition:width .5s;}
 
-/* MANUAL PAGE */
-.manual-header{padding:1.5rem 1.25rem .75rem;}
-.manual-title{font-family:'Syncopate',sans-serif;font-size:.85rem;letter-spacing:.2em;color:var(--purple);margin-bottom:.25rem;}
-.manual-sub{font-size:.75rem;color:var(--muted);}
-.archive-card{margin:.5rem 1rem;background:var(--card);border:1px solid var(--border);border-radius:14px; overflow-y-auto;}
-.archive-card:hover { transform: translateY(-5px) scale(1.03); box-shadow: 0 5px 30px rgba(0, 210, 255, 0.4); }
-.archive-header{display:flex;align-items:center;gap:.75rem;padding:.9rem 1.1rem;cursor:pointer;}
-.archive-icon{width:32px;height:32px;background:linear-gradient(135deg,rgba(0,242,255,.15),rgba(188,19,254,.15));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;}
-.archive-name{font-family:'Syncopate',sans-serif;font-size:.7rem;letter-spacing:.15em;flex:1;}
-.archive-body{padding:.5rem 1.1rem 1.1rem;border-top:1px solid rgba(255,255,255,.04);}
-.archive-step{display:flex;gap:.75rem;margin-bottom:.85rem;align-items:flex-start;}
-.step-num{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--purple));display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;color:#030305;flex-shrink:0;margin-top:.1rem;}
-.step-text{font-size:.78rem;color:var(--text);line-height:1.7;flex:1;}
+/* ══════════════════════════════════════════════
+   PAGES
+══════════════════════════════════════════════ */
+.page{display:none;flex:1;overflow-y:auto;padding-bottom:calc(72px + env(safe-area-inset-bottom));}
+.page.active{display:block;}
+.page-enter{animation:pageIn .35s cubic-bezier(.4,0,.2,1);}
+@keyframes pageIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ══════════════════════════════════════════════
+   ACHIEVEMENTS
+══════════════════════════════════════════════ */
+.achievements-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;padding:0 1rem;}
+.badge-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:.75rem .5rem;text-align:center;transition:var(--trans);opacity:0;transform:scale(.9);}
+.badge-card.revealed{opacity:1;transform:scale(1);}
+.badge-card.unlocked{border-color:rgba(255,215,0,.35);background:rgba(255,215,0,.04);}
+.badge-card.unlocked .badge-icon{filter:none;}
+.badge-icon{font-size:1.6rem;display:block;margin-bottom:.4rem;filter:grayscale(1) brightness(.4);transition:var(--trans);}
+.badge-card.unlocked .badge-icon{filter:none;animation:badgeGlow 2s ease-in-out infinite;}
+@keyframes badgeGlow{0%,100%{filter:drop-shadow(0 0 4px var(--gold))}50%{filter:drop-shadow(0 0 10px var(--gold))}}
+.badge-name{font-family:var(--font-head);font-size:.48rem;letter-spacing:.1em;color:var(--text);margin-bottom:.15rem;}
+.badge-req{font-size:.55rem;color:var(--muted);}
+
+/* ══════════════════════════════════════════════
+   MANUAL / NEURAL ARCHIVE
+══════════════════════════════════════════════ */
+.archive-card{margin:.45rem 1rem;background:var(--card);border:1px solid var(--border2);border-radius:var(--r16);overflow:hidden;transition:var(--trans);}
+.archive-header{display:flex;align-items:center;gap:.7rem;padding:.85rem 1rem;cursor:pointer;}
+.archive-icon{width:32px;height:32px;background:linear-gradient(135deg,rgba(0,242,255,.12),rgba(188,19,254,.12));border-radius:var(--r8);display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;}
+.archive-name{font-family:var(--font-head);font-size:.65rem;letter-spacing:.15em;flex:1;}
+.archive-body{padding:.5rem 1rem 1rem;border-top:1px solid rgba(255,255,255,.04);}
+.archive-step{display:flex;gap:.7rem;margin-bottom:.8rem;align-items:flex-start;}
+.step-num{width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--purple));display:flex;align-items:center;justify-content:center;font-size:.55rem;font-weight:700;color:#030305;flex-shrink:0;margin-top:.1rem;}
+.step-text{font-size:.76rem;color:var(--text);line-height:1.75;flex:1;}
 .step-text strong{color:var(--cyan);font-weight:500;}
-.archive-note{background:rgba(188,19,254,.07);border-left:2px solid var(--purple);padding:.6rem .75rem;border-radius:0 8px 8px 0;font-size:.72rem;color:var(--muted);line-height:1.6;margin-top:.5rem;}
+.archive-note{background:rgba(188,19,254,.07);border-left:2px solid var(--purple);padding:.55rem .7rem;border-radius:0 8px 8px 0;font-size:.7rem;color:var(--muted);line-height:1.6;margin-top:.4rem;}
 
-/* SHIELD PAGE */
-.shield-header{padding:1.5rem 1.25rem .75rem;}
-.shield-title-row{display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem;}
-.shield-icon-big{font-size:1.8rem;}
-.shield-title{font-family:'Syncopate',sans-serif;font-size:.9rem;letter-spacing:.2em;color:var(--gold);}
-.shield-sub{font-size:.75rem;color:var(--muted);line-height:1.5;}
-.lock-card{margin:.5rem 1rem 1rem;background:rgba(188,19,254,.05);border:1px solid rgba(188,19,254,.2);border-radius:14px;padding:1.5rem;text-align:center;}
-.lock-card-title{font-family:'Syncopate',sans-serif;font-size:.75rem;letter-spacing:.2em;color:var(--purple);margin-bottom:.6rem;}
-.lock-card-days{font-family:'Syncopate',sans-serif;font-size:2.5rem;color:var(--purple);}
-.lock-card-of{font-size:.7rem;color:var(--muted);margin:.2rem 0 .8rem;}
-.forty-bar-bg{height:8px;background:rgba(255,255,255,.06);border-radius:8px; overflow-y-auto;margin-bottom:.75rem;}
-.forty-bar-fill{height:100%;border-radius:8px;background:linear-gradient(90deg,var(--purple),var(--cyan));position:relative;transition:width .8s cubic-bezier(.4,0,.2,1);}
+/* ══════════════════════════════════════════════
+   SHIELD PAGE
+══════════════════════════════════════════════ */
+.shield-prog-card{margin:.5rem 1rem 1rem;background:rgba(188,19,254,.05);border:1px solid rgba(188,19,254,.2);border-radius:var(--r16);padding:1.4rem 1.2rem;text-align:center;position:relative;overflow:hidden;}
+.shield-prog-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(188,19,254,.1),transparent 60%);pointer-events:none;}
+.shield-days-big{font-family:var(--font-head);font-size:2.8rem;background:linear-gradient(135deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
+.shield-of{font-size:.65rem;color:var(--muted);margin:.2rem 0 .75rem;letter-spacing:.1em;}
+.forty-bar-bg{height:7px;background:rgba(255,255,255,.06);border-radius:7px;overflow:hidden;margin-bottom:.6rem;}
+.forty-bar-fill{height:100%;border-radius:7px;background:linear-gradient(90deg,var(--purple),var(--cyan));position:relative;transition:width .8s cubic-bezier(.4,0,.2,1);}
 .forty-bar-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);animation:shimmer 2s infinite;background-size:200% 100%;}
-.milestone-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.35rem;margin-top:1rem;}
-.milestone-dot{aspect-ratio:1;border-radius:4px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:.45rem;color:var(--muted);transition:all .3s;}
-.milestone-dot.done{background:rgba(188,19,254,.2);border-color:rgba(188,19,254,.4);color:var(--purple);}
-.milestone-dot.done-cyan{background:rgba(0,242,255,.15);border-color:rgba(0,242,255,.3);color:var(--cyan);}
-.claim-section{margin:.5rem 1rem 1rem;}
-.claim-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.25rem;}
-.claim-title{font-family:'Syncopate',sans-serif;font-size:.7rem;letter-spacing:.18em;color:var(--cyan);margin-bottom:1rem;}
-.claim-locked{opacity:.35;pointer-events:none;}
-.form-group{margin-bottom:.9rem;}
-.form-label{font-size:.65rem;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:.4rem;}
-.form-input{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:.65rem .85rem;color:var(--text);font-family:'Outfit',sans-serif;font-size:.82rem;outline:none;transition:border-color .2s;}
+.shield-status-txt{font-size:.68rem;color:var(--muted);}
+.milestone-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:.3rem;margin:.75rem 0;}
+.m-dot-grid{aspect-ratio:1;border-radius:4px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:.42rem;color:var(--muted);transition:all .4s;}
+.m-dot-grid.done{background:rgba(188,19,254,.2);border-color:rgba(188,19,254,.4);color:var(--purple);}
+.m-dot-grid.peak{background:rgba(0,242,255,.15);border-color:rgba(0,242,255,.3);color:var(--cyan);}
+
+/* ══════════════════════════════════════════════
+   CLAIM FORM
+══════════════════════════════════════════════ */
+.claim-card{margin:.5rem 1rem 1rem;background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:1.2rem;}
+.claim-title{font-family:var(--font-head);font-size:.65rem;letter-spacing:.18em;color:var(--cyan);margin-bottom:.9rem;}
+.locked-msg{text-align:center;padding:1.2rem 1rem;font-size:.73rem;color:var(--muted);line-height:1.6;}
+.locked-msg .l-icon{display:block;font-size:1.6rem;margin-bottom:.5rem;}
+.form-group{margin-bottom:.85rem;}
+.form-label{font-size:.58rem;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:.35rem;font-family:var(--font-head);}
+.form-input{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border2);border-radius:8px;padding:.6rem .8rem;color:var(--text);font-family:var(--font-body);font-size:.8rem;outline:none;transition:border-color .2s;}
 .form-input:focus{border-color:rgba(0,242,255,.4);}
-.form-input::placeholder{color:var(--muted);opacity:.5;}
-.claim-btn{width:100%;padding:.85rem;background:linear-gradient(135deg,rgba(188,19,254,.2),rgba(0,242,255,.1));border:1px solid rgba(188,19,254,.4);border-radius:10px;color:var(--text);font-family:'Syncopate',sans-serif;font-size:.65rem;letter-spacing:.18em;cursor:pointer;transition:all .2s;margin-top:.25rem;}
-.claim-btn:active{transform:scale(.98);}
-.locked-overlay{text-align:center;padding:1.5rem 1rem;font-size:.75rem;color:var(--muted);line-height:1.6;}
-.locked-overlay .lock-emoji{display:block;font-size:1.8rem;margin-bottom:.6rem;}
+.form-input::placeholder{color:var(--muted);opacity:.45;}
+textarea.form-input{resize:none;}
+.claim-submit-btn{width:100%;padding:.8rem;background:linear-gradient(135deg,rgba(188,19,254,.18),rgba(0,242,255,.1));border:1px solid rgba(188,19,254,.4);border-radius:10px;color:var(--text);font-family:var(--font-head);font-size:.62rem;letter-spacing:.18em;cursor:pointer;transition:var(--trans);margin-top:.2rem;}
+.claim-submit-btn:active{transform:scale(.98);}
 
-/* RESET BTN */
-.reset-section{padding:.5rem 1rem 1rem;text-align:center;}
-.reset-btn{background:none;border:1px solid rgba(255,71,87,.2);color:rgba(255,71,87,.5);font-family:'Syncopate',sans-serif;font-size:.55rem;letter-spacing:.18em;padding:.45rem 1rem;border-radius:8px;cursor:pointer;transition:all .25s;}
-.reset-btn:active{border-color:var(--danger);color:var(--danger);}
+/* ══════════════════════════════════════════════
+   NOTEPAD
+══════════════════════════════════════════════ */
+.notes-header{display:flex;align-items:center;justify-content:space-between;margin:0 1rem .6rem;}
+.notes-add-btn{background:rgba(0,242,255,.08);border:1px solid rgba(0,242,255,.2);color:var(--cyan);padding:.3rem .7rem;border-radius:20px;font-family:var(--font-head);font-size:.55rem;letter-spacing:.12em;cursor:pointer;transition:var(--trans);}
+.notes-add-btn:active{transform:scale(.96);}
+.note-card{margin:.4rem 1rem;background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:.85rem 1rem;position:relative;transition:var(--trans);opacity:0;transform:translateX(-8px);}
+.note-card.revealed{opacity:1;transform:translateX(0);}
+.note-card:hover{border-color:rgba(0,242,255,.15);}
+.note-date{font-size:.58rem;color:var(--muted);margin-bottom:.35rem;font-family:var(--font-head);letter-spacing:.08em;}
+.note-text{font-size:.78rem;color:var(--text);line-height:1.65;white-space:pre-wrap;}
+.note-del{position:absolute;top:.7rem;right:.7rem;width:22px;height:22px;border-radius:50%;background:rgba(255,71,87,.1);border:1px solid rgba(255,71,87,.2);color:rgba(255,71,87,.6);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.65rem;transition:var(--trans);}
+.note-del:active{background:rgba(255,71,87,.2);color:var(--danger);}
+.empty-state{text-align:center;padding:2.5rem 1rem;color:var(--muted);font-size:.75rem;line-height:1.7;}
+.empty-icon{font-size:2rem;display:block;margin-bottom:.6rem;opacity:.4;}
 
-/* TOAST */
-.toast{position:fixed;top:1.5rem;left:50%;transform:translateX(-50%) translateY(-80px);background:rgba(3,3,5,.95);border:1px solid var(--border);backdrop-filter:blur(20px);border-radius:12px;padding:.7rem 1.2rem;font-size:.75rem;color:var(--cyan);font-family:'Syncopate',sans-serif;letter-spacing:.12em;z-index:9998;transition:transform .35s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;pointer-events:none;}
+/* ══════════════════════════════════════════════
+   CHAT (GEMINI)
+══════════════════════════════════════════════ */
+.chat-container{display:flex;flex-direction:column;height:calc(100dvh - 130px - env(safe-area-inset-bottom));}
+.chat-messages{flex:1;overflow-y:auto;padding:.5rem 1rem;}
+.chat-msg{margin-bottom:.75rem;animation:msgIn .25s ease;}
+@keyframes msgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.chat-msg.user{display:flex;justify-content:flex-end;}
+.chat-msg.bot{display:flex;justify-content:flex-start;}
+.msg-bubble{max-width:82%;padding:.65rem .9rem;border-radius:14px;font-size:.78rem;line-height:1.6;}
+.chat-msg.user .msg-bubble{background:linear-gradient(135deg,rgba(0,242,255,.15),rgba(188,19,254,.1));border:1px solid rgba(0,242,255,.2);color:var(--text);border-bottom-right-radius:4px;}
+.chat-msg.bot .msg-bubble{background:var(--card2);border:1px solid var(--border2);color:var(--text);border-bottom-left-radius:4px;}
+.msg-bubble.typing{padding:.5rem .9rem;}
+.typing-dots{display:flex;gap:.3rem;align-items:center;height:1.2rem;}
+.typing-dots span{width:5px;height:5px;border-radius:50%;background:var(--muted);animation:typingDot 1.2s infinite;}
+.typing-dots span:nth-child(2){animation-delay:.2s;}
+.typing-dots span:nth-child(3){animation-delay:.4s;}
+@keyframes typingDot{0%,60%,100%{transform:scale(1);opacity:.4}30%{transform:scale(1.4);opacity:1}}
+.chat-input-row{display:flex;gap:.5rem;padding:.6rem 1rem;border-top:1px solid var(--border2);background:var(--bg);}
+[data-theme="day"] .chat-input-row{background:var(--bg2);}
+.chat-input{flex:1;background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:.55rem .8rem;color:var(--text);font-family:var(--font-body);font-size:.8rem;outline:none;transition:border-color .2s;}
+.chat-input:focus{border-color:rgba(0,242,255,.35);}
+.chat-send-btn{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--cyan),var(--purple));border:none;color:#030305;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--trans);flex-shrink:0;}
+.chat-send-btn:active{transform:scale(.93);}
+.chat-send-btn:disabled{opacity:.4;}
+.chat-no-key{text-align:center;padding:2rem 1.5rem;color:var(--muted);font-size:.75rem;line-height:1.7;}
+
+/* ══════════════════════════════════════════════
+   SETTINGS PAGE
+══════════════════════════════════════════════ */
+.settings-section{margin:.5rem 1rem 1rem;}
+.settings-title{font-family:var(--font-head);font-size:.65rem;letter-spacing:.2em;color:var(--muted);margin-bottom:.6rem;padding:.3rem 0;}
+.settings-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);overflow:hidden;margin-bottom:.75rem;}
+.setting-row{display:flex;align-items:center;gap:.75rem;padding:.8rem 1rem;border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer;transition:background .15s;}
+.setting-row:last-child{border-bottom:none;}
+.setting-row:active{background:rgba(255,255,255,.03);}
+.setting-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;}
+.setting-text{flex:1;}
+.setting-name{font-size:.78rem;color:var(--text);display:block;}
+.setting-desc{font-size:.62rem;color:var(--muted);display:block;margin-top:.1rem;}
+.setting-control{flex-shrink:0;}
+
+/* Toggle Switch */
+.toggle{width:38px;height:20px;background:rgba(255,255,255,.1);border-radius:10px;position:relative;cursor:pointer;transition:background .2s;}
+.toggle.on{background:linear-gradient(90deg,var(--cyan),var(--purple));}
+.toggle-knob{position:absolute;top:2px;left:2px;width:16px;height:16px;background:#fff;border-radius:50%;transition:transform .25s cubic-bezier(.34,1.56,.64,1);}
+.toggle.on .toggle-knob{transform:translateX(18px);}
+
+/* Segmented control */
+.seg-ctrl{display:flex;background:rgba(255,255,255,.05);border-radius:8px;padding:2px;gap:2px;}
+.seg-opt{flex:1;padding:.3rem .4rem;border-radius:6px;font-family:var(--font-head);font-size:.48rem;letter-spacing:.08em;text-align:center;cursor:pointer;transition:var(--trans);color:var(--muted);}
+.seg-opt.active{background:rgba(0,242,255,.15);color:var(--cyan);}
+
+/* API key input */
+.api-input-wrap{padding:.6rem 1rem;}
+.api-key-input{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border2);border-radius:8px;padding:.55rem .75rem;color:var(--text);font-family:monospace;font-size:.7rem;outline:none;transition:border-color .2s;}
+.api-key-input:focus{border-color:rgba(0,242,255,.35);}
+.api-save-btn{margin:.4rem 1rem .75rem;display:block;background:rgba(0,242,255,.08);border:1px solid rgba(0,242,255,.2);color:var(--cyan);padding:.45rem 1rem;border-radius:8px;font-family:var(--font-head);font-size:.55rem;letter-spacing:.12em;cursor:pointer;transition:var(--trans);}
+.api-save-btn:active{transform:scale(.97);}
+
+/* Privacy/Credits cards */
+.info-card{margin:.5rem 1rem;background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.2rem;}
+.info-card p{font-size:.76rem;color:var(--muted);line-height:1.75;margin-bottom:.7rem;}
+.info-card p:last-child{margin-bottom:0;}
+.info-card strong{color:var(--text);font-weight:500;}
+.info-card a{color:var(--cyan);}
+.dev-card{text-align:center;padding:1.5rem 1.2rem;}
+.dev-avatar{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--purple));display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-size:1rem;color:#030305;margin:0 auto 1rem;}
+.dev-name{font-family:var(--font-head);font-size:.8rem;letter-spacing:.15em;color:var(--text);margin-bottom:.25rem;}
+.dev-role{font-size:.72rem;color:var(--muted);}
+
+/* ══════════════════════════════════════════════
+   MODALS
+══════════════════════════════════════════════ */
+.modal-backdrop{position:fixed;inset:0;background:rgba(3,3,5,.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:900;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;}
+.modal-backdrop.open{opacity:1;pointer-events:all;}
+.modal-sheet{background:var(--bg2);border:1px solid var(--border);border-radius:24px 24px 0 0;padding:1.5rem 1.5rem calc(1.5rem + env(safe-area-inset-bottom));width:100%;max-width:480px;transform:translateY(100%);transition:transform .35s cubic-bezier(.32,0,.67,0);}
+.modal-backdrop.open .modal-sheet{transform:translateY(0);transition:transform .35s cubic-bezier(.34,1.3,.64,1);}
+.modal-handle{width:36px;height:3px;background:rgba(255,255,255,.15);border-radius:2px;margin:0 auto 1.2rem;}
+.modal-icon{font-size:2rem;display:block;text-align:center;margin-bottom:.75rem;}
+.modal-title{font-family:var(--font-head);font-size:.8rem;letter-spacing:.15em;text-align:center;margin-bottom:.5rem;}
+.modal-title.danger{color:var(--danger);}
+.modal-title.success{color:var(--green);}
+.modal-title.warning{color:var(--gold);}
+.modal-body{font-size:.76rem;color:var(--muted);line-height:1.65;text-align:center;margin-bottom:1.2rem;}
+.modal-actions{display:flex;gap:.6rem;}
+.modal-btn{flex:1;padding:.8rem;border-radius:10px;font-family:var(--font-head);font-size:.6rem;letter-spacing:.15em;cursor:pointer;transition:var(--trans);border:1px solid;}
+.modal-btn:active{transform:scale(.97);}
+.modal-btn.cancel{background:transparent;border-color:var(--border2);color:var(--muted);}
+.modal-btn.confirm-danger{background:rgba(255,71,87,.12);border-color:rgba(255,71,87,.3);color:var(--danger);}
+.modal-btn.confirm-primary{background:rgba(0,242,255,.1);border-color:rgba(0,242,255,.3);color:var(--cyan);}
+.modal-btn.confirm-warning{background:rgba(255,215,0,.08);border-color:rgba(255,215,0,.25);color:var(--gold);}
+.modal-textarea{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border2);border-radius:8px;padding:.65rem .8rem;color:var(--text);font-family:var(--font-body);font-size:.8rem;outline:none;resize:none;margin-bottom:.9rem;}
+.modal-textarea:focus{border-color:rgba(0,242,255,.35);}
+
+/* ══════════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════════ */
+.toast{position:fixed;top:1.2rem;left:50%;transform:translateX(-50%) translateY(-80px);background:rgba(3,3,5,.97);border:1px solid var(--border);backdrop-filter:blur(20px);border-radius:12px;padding:.65rem 1.2rem;font-size:.68rem;color:var(--cyan);font-family:var(--font-head);letter-spacing:.12em;z-index:9998;transition:transform .38s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;pointer-events:none;max-width:85vw;text-overflow:ellipsis;overflow:hidden;}
 .toast.show{transform:translateX(-50%) translateY(0);}
 .toast.error{color:var(--danger);border-color:rgba(255,71,87,.3);}
 .toast.purple{color:var(--purple);border-color:rgba(188,19,254,.3);}
+.toast.success{color:var(--green);border-color:rgba(0,255,136,.3);}
 
-/* SECTION DIVIDER */
-.section-div{display:flex;align-items:center;gap:.75rem;padding:.25rem 1.25rem .5rem;margin-top:.25rem;}
-.section-div-line{flex:1;height:1px;background:rgba(255,255,255,.05);}
-.section-div-text{font-size:.55rem;letter-spacing:.25em;color:var(--muted);text-transform:uppercase;font-family:'Syncopate',sans-serif;}
+/* ══════════════════════════════════════════════
+   HAPTIC EFFECTS
+══════════════════════════════════════════════ */
+@keyframes hapticError{0%,100%{transform:translateX(0)}15%{transform:translateX(-5px)}30%{transform:translateX(5px)}45%{transform:translateX(-4px)}60%{transform:translateX(4px)}75%{transform:translateX(-2px)}90%{transform:translateX(2px)}}
+@keyframes hapticSuccess{0%{transform:scale(1)}40%{transform:scale(1.02)}70%{transform:scale(.99)}100%{transform:scale(1)}}
+@keyframes flashRed{0%,100%{box-shadow:none}50%{box-shadow:0 0 40px rgba(255,71,87,.2) inset}}
+@keyframes flashGreen{0%,100%{box-shadow:none}50%{box-shadow:0 0 40px rgba(0,255,136,.15) inset}}
+.haptic-error{animation:hapticError .4s ease,flashRed .4s ease;}
+.haptic-success{animation:hapticSuccess .5s ease,flashGreen .5s ease;}
 
-/* GRADIENT TEXT */
+/* ══════════════════════════════════════════════
+   PARTICLES CANVAS
+══════════════════════════════════════════════ */
+#particles{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.35;}
+
+/* ══════════════════════════════════════════════
+   RESET BUTTON
+══════════════════════════════════════════════ */
+.reset-section{padding:.25rem 1rem .75rem;text-align:center;}
+.reset-btn{background:none;border:1px solid rgba(255,71,87,.18);color:rgba(255,71,87,.45);font-family:var(--font-head);font-size:.5rem;letter-spacing:.18em;padding:.4rem .9rem;border-radius:8px;cursor:pointer;transition:var(--trans);}
+.reset-btn:active{border-color:var(--danger);color:var(--danger);}
+
+/* ══════════════════════════════════════════════
+   GRADIENT UTILITY
+══════════════════════════════════════════════ */
 .grad-text{background:linear-gradient(135deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 
-/* GLOW EFFECTS */
-.glow-cyan{box-shadow:0 0 20px rgba(0,242,255,.08);}
-.glow-purple{box-shadow:0 0 20px rgba(188,19,254,.08);}
+/* Intersection observer animation triggers */
+.animate-in{opacity:0;transform:translateY(16px);transition:opacity .45s ease,transform .45s ease;}
+.animate-in.visible{opacity:1;transform:translateY(0);}
 
-/* PULSE ANIM */
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
-.pulse{animation:pulse 2s infinite;}
-
-/* FLOATING PARTICLES */
-.particle{position:fixed;border-radius:50%;pointer-events:none;z-index:0;}
+/* ══════════════════════════════════════════════
+   LANG TOGGLE
+══════════════════════════════════════════════ */
+.lang-pills{display:flex;gap:.4rem;}
+.lang-pill{padding:.3rem .65rem;border-radius:20px;font-family:var(--font-head);font-size:.52rem;letter-spacing:.1em;cursor:pointer;border:1px solid var(--border2);color:var(--muted);transition:var(--trans);}
+.lang-pill.active{background:rgba(0,242,255,.1);border-color:rgba(0,242,255,.3);color:var(--cyan);}
 </style>
 </head>
 <body>
 
-<!-- BOOT LOADER -->
+<!-- ═══════════ BOOT ═══════════ -->
 <div id="boot">
   <div class="boot-scan"></div>
   <div class="boot-vignette"></div>
-  <div style="text-align:center;position:relative;z-index:1;">
+  <div style="text-align:center;position:relative;z-index:1">
     <div class="boot-logo">PRAYERITY<br>OS</div>
-    <div class="boot-sub" style="margin-top:.4rem;">v4.3 FINAL — CYBER DEEN</div>
+    <div class="boot-version">v5.0 — CYBER DEEN FINAL</div>
   </div>
-  <div style="text-align:center;position:relative;z-index:1;">
-    <div class="boot-bar-wrap"><div class="boot-bar"></div></div>
-    <div class="boot-status pulse" style="margin-top:.75rem;" id="bootStatus">INITIALIZING NEURAL CORE...</div>
+  <div style="text-align:center;position:relative;z-index:1;width:100%;padding:0 2rem">
+    <div class="boot-bar-wrap" style="margin:0 auto .75rem"><div class="boot-bar"></div></div>
+    <div class="boot-status" id="bootStatus">INITIALIZING NEURAL CORE...</div>
   </div>
 </div>
 
-<!-- TOAST -->
+<!-- ═══════════ TOAST ═══════════ -->
 <div class="toast" id="toast"></div>
 
-<!-- APP -->
+<!-- ═══════════ MODAL ═══════════ -->
+<div class="modal-backdrop" id="modal" onclick="modalOutsideClick(event)">
+  <div class="modal-sheet" id="modalSheet">
+    <div class="modal-handle"></div>
+    <span class="modal-icon" id="modalIcon"></span>
+    <div class="modal-title" id="modalTitle"></div>
+    <div class="modal-body" id="modalBody"></div>
+    <textarea class="modal-textarea" id="modalTextarea" style="display:none" rows="4" placeholder="Write your note..."></textarea>
+    <div class="modal-actions" id="modalActions"></div>
+  </div>
+</div>
+
+<!-- ═══════════ APP ═══════════ -->
 <div id="app">
-  <!-- PARTICLES -->
-  <canvas id="particles" style="position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.4;"></canvas>
+  <canvas id="particles" style="position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.35;"></canvas>
 
-  <!-- PAGES -->
-  <div style="position:relative;z-index:1;flex:1;display:flex;flex-direction:column;" id="pages">
+  <div style="position:relative;z-index:1;flex:1;display:flex;flex-direction:column" id="pages">
 
-    <!-- RITUALS PAGE -->
+    <!-- ════════════════════════════
+         PAGE: RITUALS
+    ════════════════════════════ -->
     <div class="page active" id="page-rituals">
       <div class="app-header">
         <div class="header-row">
-          <div class="app-title">RITUALS</div>
+          <div class="app-title" data-i18n="rituals">RITUALS</div>
           <div class="version-badge">PRAYERITY OS</div>
         </div>
-        <div style="font-size:.72rem;color:var(--muted);" id="dateDisplay"></div>
+        <div class="header-sub" id="dateDisplay"></div>
       </div>
 
-      <!-- XP PANEL -->
-      <div class="xp-panel glow-cyan" id="xpPanel">
-        <div class="xp-row">
-          <span class="xp-label">System XP</span>
-          <span class="xp-value" id="xpDisplay">0 XP</span>
+      <!-- XP/LEVEL PANEL -->
+      <div class="xp-panel" id="xpPanel">
+        <div class="level-row">
+          <div class="level-badge">
+            <div class="level-num" id="levelNum">1</div>
+            <div class="level-info">
+              <div class="level-name" id="levelName">INITIATE</div>
+              <div class="level-label" data-i18n="rank">RANK</div>
+            </div>
+          </div>
+          <div class="xp-right">
+            <div class="xp-total" id="xpTotalDisplay">0 XP</div>
+            <div class="xp-next" id="xpNextDisplay">Next: 500 XP</div>
+          </div>
         </div>
-        <div class="xp-bar-bg">
-          <div class="xp-bar-fill" id="xpBar" style="width:0%;"></div>
-        </div>
+        <div class="xp-bar-bg"><div class="xp-bar-fill" id="xpBar" style="width:0%"></div></div>
         <div class="stats-row">
           <div class="stat-chip">
-            <span class="stat-chip-val cyan" id="streakDisplay">0</span>
-            <span class="stat-chip-lbl">DAY STREAK</span>
+            <span class="stat-v c-cyan" id="streakDisplay">0</span>
+            <span class="stat-l" data-i18n="streak">STREAK</span>
           </div>
           <div class="stat-chip">
-            <span class="stat-chip-val purple" id="totalXpDisplay">0</span>
-            <span class="stat-chip-lbl">TOTAL XP</span>
+            <span class="stat-v c-purple" id="todayXpDisplay">0</span>
+            <span class="stat-l" data-i18n="today_xp">TODAY XP</span>
           </div>
           <div class="stat-chip">
-            <span class="stat-chip-val gold" id="completedDisplay">0/6</span>
-            <span class="stat-chip-lbl">PRAYERS</span>
+            <span class="stat-v c-gold" id="completedDisplay">0/6</span>
+            <span class="stat-l" data-i18n="prayers">PRAYERS</span>
           </div>
         </div>
       </div>
 
-      <!-- LOCK SCREEN (shown after sync) -->
-      <div id="lockScreen" style="display:none;">
-        <div class="lock-screen glow-purple">
-          <span class="lock-icon">🔒</span>
-          <div class="lock-title">SYSTEM COOLING</div>
-          <div class="lock-sub">Sync complete. Rituals locked until next cycle.</div>
-          <div class="lock-timer" id="lockTimer">00:00:00</div>
-          <div class="lock-timer-label">TIME UNTIL NEXT CYCLE</div>
-          <div class="lock-progress-bar">
-            <div class="lock-progress-fill" id="lockProgressFill" style="width:0%;"></div>
-          </div>
-          <div style="font-size:.65rem;color:var(--muted);margin-top:.5rem;">Next cycle resets at midnight</div>
+      <!-- DATE NAVIGATOR -->
+      <div class="date-nav">
+        <button class="date-nav-btn" id="prevDayBtn" onclick="navigateDay(-1)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div class="date-nav-center">
+          <div class="date-nav-str" id="navDateStr">TODAY</div>
+          <div class="date-nav-dot today" id="navDot"></div>
+        </div>
+        <button class="date-nav-btn" id="nextDayBtn" onclick="navigateDay(1)" disabled>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+      <!-- LOCK SCREEN (post sync) -->
+      <div id="lockScreen" style="display:none" class="lock-screen-wrap">
+        <div class="lock-screen">
+          <span class="lock-icon-big">🔒</span>
+          <div class="lock-title" data-i18n="system_cooling">SYSTEM COOLING</div>
+          <div class="lock-sub" data-i18n="sync_done">Sync complete. Navigate past days to backfill.</div>
+          <div class="lock-timer-big" id="lockTimer">00:00:00</div>
+          <div class="lock-timer-lbl" data-i18n="next_cycle">TIME UNTIL NEXT CYCLE</div>
+          <div class="lock-prog-bg"><div class="lock-prog-fill" id="lockProgFill" style="width:0%"></div></div>
         </div>
       </div>
 
-      <!-- PRAYER CHECKLIST -->
+      <!-- RITUAL LIST -->
       <div id="ritualsList">
         <div class="section-div">
           <div class="section-div-line"></div>
-          <div class="section-div-text">DAILY PRAYERS</div>
+          <div class="section-div-text" data-i18n="daily_prayers">DAILY PRAYERS</div>
           <div class="section-div-line"></div>
         </div>
         <div id="prayerCards"></div>
         <div class="sync-section">
-          <button class="sync-btn" id="syncBtn" onclick="syncData()">
-            ⟳ &nbsp;SYNC DAILY DATA
-          </button>
+          <button class="sync-btn" id="syncBtn" onclick="handleSync()">⟳ &nbsp;<span data-i18n="sync_btn">SYNC DAILY DATA</span></button>
         </div>
         <div class="reset-section">
-          <button class="reset-btn" onclick="confirmReset()">⚠ HARD SYSTEM RESET</button>
+          <button class="reset-btn" onclick="showResetModal()" data-i18n="hard_reset">⚠ HARD SYSTEM RESET</button>
         </div>
       </div>
     </div>
 
-    <!-- MANUAL PAGE -->
+    <!-- ════════════════════════════
+         PAGE: MANUAL
+    ════════════════════════════ -->
     <div class="page" id="page-manual">
-      <div class="manual-header app-header">
+      <div class="app-header">
         <div class="header-row">
-          <div class="app-title grad-text">NEURAL ARCHIVE</div>
+          <div class="app-title grad-text" data-i18n="neural_archive">NEURAL ARCHIVE</div>
         </div>
-        <div class="manual-sub">Ritual Protocol Documentation — Offline Mode</div>
+        <div class="header-sub" data-i18n="archive_sub">Ritual Protocol Documentation — Offline Mode</div>
       </div>
 
-      <!-- WUDU -->
-      <div class="archive-card">
-        <div class="archive-header" onclick="toggleArchive(this)">
-          <div class="archive-icon">💧</div>
-          <div class="archive-name">WUDU PROTOCOL</div>
-          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
-        <div class="archive-body" style="display:none;">
-          <div class="archive-step"><div class="step-num">1</div><div class="step-text"><strong>ইচ্ছা (নিয়্যাহ্):</strong> 'উযু করার পূর্বে আল্লাহর জন্য হৃদয়ে ইচ্ছা পোষণ করো। মুখে বলা জরুরী নয়, তবে উত্তম। </div></div>
-          <div class="archive-step"><div class="step-num">2</div><div class="step-text"><strong>বিসমিল্লাহ্:</strong> শুরুর আগে "Bismillah" বলো। এটা সুন্নাহ্ এবং বাদ দেওয়া উচিত নয়। </div></div>
-          <div class="archive-step"><div class="step-num">3</div><div class="step-text"><strong>হাত ধোয়া (x3):</strong> কব্জি পর্যন্ত উভয় হাত তিনবার ধুয়ে নাও, ডান হাত দিয়ে শুরু করো। </div></div>
-          <div class="archive-step"><div class="step-num">4</div><div class="step-text"><strong>কুলি করা (x3):</strong> মুখে পানি নাও, ভালোভাবে গড়গড়া করো এবং ফেলে দাও। এভাবে তিনবার পূনরাবৃত্তি করো। </div></div>
-          <div class="archive-step"><div class="step-num">5</div><div class="step-text"><strong>নাক ঝাঁড়া (x3):</strong> ডান হাত দিয়ে আলতো করে নাকে জল টেনে নিন এবং বাম হাত দিয়ে তা বের করে দিন। এভাবে তিনবার পূনরাবৃত্তি করো। </div></div>
-          <div class="archive-step"><div class="step-num">6</div><div class="step-text"><strong>চেহারা ধোয়া (x3):</strong> চুলের গোড়া থেকে থুতনি পর্যন্ত এবং এক কান থেকে অন্য কান পর্যন্ত তিনবার ধৌত করো। </div></div>
-          <div class="archive-step"><div class="step-num">7</div><div class="step-text"><strong>কনুই পর্যন্ত হাত ধোয়া (x3):</strong> ডানহাতের আঙ্গুলের ডগা থেকে কনুই পর্যন্ত তিনবার ধৌত করো, অতঃপর একইভাবে বাঁ হাতও ধৌত করো। </div></div>
-          <div class="archive-step"><div class="step-num">8</div><div class="step-text"><strong>মাথা মাসেহ্ করা (x1):</strong> ভেজা হাত ব্যবহার করে পুরো মাথাটি একবার সামনে থেকে পেছনে, তারপর পেছন থেকে সামনে মাসেহ্ করো। </div></div>
-          <div class="archive-step"><div class="step-num">9</div><div class="step-text"><strong>কান মাসেহ্ করা (x1):</strong> একই পানি দিয়ে তর্জনী আঙুল কানে ঢুকিয়ে বুড়ো আঙুল দিয়ে কানের পেছন দিকটা মাসেহ্ করুন। </div></div>
-          <div class="archive-step"><div class="step-num">10</div><div class="step-text"><strong>পা ধোয়া (x3):</strong> ডান পা গোড়ালি পর্যন্ত তিনবার ধুয়ে নিন, তারপর বাম পা ধুয়ে নিন। </div></div>
-          <div class="archive-note">⚡ 'উযু যদি ভেঙ্গে যায় (মলদ্বার থেকে বায়ু বের হলে, টয়লেট ব্যবহার করলে, ঘুমালে), তবে তা অবশ্যই নামাজের আগে শুধরে নিতে হবে। প্রয়োজনে 'উযুর স্থলে গোসল করতে হবে। </div>
-        </div>
-      </div>
-
-      <!-- QIYAM -->
-      <div class="archive-card">
-        <div class="archive-header" onclick="toggleArchive(this)">
-          <div class="archive-icon">🌙</div>
-          <div class="archive-name">QIYAM AL-LAYL</div>
-          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
-        <div class="archive-body" style="display:none;">
-          <div class="archive-step"><div class="step-num">1</div><div class="step-text"><strong>সময় নির্ধারণ:</strong> 'ইশার সালাতের পরে এবং ফজরের সালাতের আগে আদায় করতে হয়। রাতের শেষ তৃতীয়াংশ (তাহাজ্জুদ) হলো সবচেয়ে পুণ্যবান, তখন আল্লাহ সর্বনিম্ন আসমানে অবতরণ করেন। </div></div>
-          <div class="archive-step"><div class="step-num">2</div><div class="step-text"><strong>ইচ্ছা:</strong> ঘুমানোর আগে অথবা নামাজ শুরু করার আগে মনে মনে কিয়ামুল-লাইল অথবা তাহাজ্জুদের নিয়ত করুন। </div></div>
-          <div class="archive-step"><div class="step-num">3</div><div class="step-text"><strong>শুরু:</strong> নবী ﷺ-এর মতো রাতের নামাজ শুরু করতে দুই রাকাত ছোট নামাজ দিয়ে শুরু করুন। </div></div>
-          <div class="archive-step"><div class="step-num">4</div><div class="step-text"><strong>রাক'আহ:</strong> দুই রাকাতের ভাগে নামাজ পড়ুন। মোট আট রাকাত নামাজ পড়া সুন্নাতে মু'আক্কাদাহ। গভীর সংযোগের জন্য দীর্ঘ সূরাসমূহ পাঠ করুন। </div></div>
-          <div class="archive-step"><div class="step-num">5</div><div class="step-text"><strong>সিজদায় দু'আ:</strong> রাতে সিজদা করা আল্লাহর গভীর নৈকট্যের একটি মুহূর্ত। আপনার নিজের ভাষায় আন্তরিকভাবে দোয়া করুন। </div></div>
-          <div class="archive-step"><div class="step-num">6</div><div class="step-text"><strong>বিতর:</strong> বিতর নামাজ (১ বা ৩ রাকাত) দিয়ে শেষ করুন। ইশার নামাজ পড়ে থাকলে বিতর নামাজ না পড়ে ঘুমাবেন না। </div></div>
-          <div class="archive-note">⚡ এমনকি দুই রাকাত আন্তরিক কিয়ামুল-লাইলও সমগ্র দুনিয়া এবং এর ভেতরের সবকিছুর চেয়ে উত্তম। পরিমাণের চেয়ে ধারাবাহিকতা বেশি গুরুত্বপূর্ণ। </div>
-        </div>
-      </div>
-
-      <!-- SUJUD -->
-      <div class="archive-card">
-        <div class="archive-header" onclick="toggleArchive(this)">
-          <div class="archive-icon">✦</div>
-          <div class="archive-name">SUJUD MASTERY</div>
-          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
-        <div class="archive-body" style="display:none;">
-          <div class="archive-step"><div class="step-num">1</div><div class="step-text"><strong>যোগাযোগের ৭টি পয়েন্ট:</strong> কপাল ও নাক, দুই হাতের তালু, দুই হাঁটু, দুই পায়ের আঙুল — এই সবকিছু একই সাথে মাটিতে স্পর্শ করতে হবে। </div></div>
-          <div class="archive-step"><div class="step-num">2</div><div class="step-text"><strong>সঠিকভাবে অবতরণ করুন:</strong> সিজদায় যাওয়ার সময় প্রথমে হাঁটু, তারপর হাতের তালু, এরপর কপাল ও নাক রাখুন। সামনের দিকে ঝুঁকে পড়বেন না। </div></div>
-          <div class="archive-step"><div class="step-num">3</div><div class="step-text"><strong>তাসবিহ্:</strong> কমপক্ষে  তিনবার বলো <strong>"Subhana Rabbiyal A'la"</strong> অধিক পুনরাবৃত্তি সালাতের গভীরতা বৃদ্ধি করে। </div></div>
-          <div class="archive-step"><div class="step-num">4</div><div class="step-text"><strong>শরীরের অবস্থান:</strong> কনুই দুটি মাটি থেকে উপরে তুলে রাখুন। পুরুষদের ক্ষেত্রে: কনুই দুটি বাইরের দিকে ছড়িয়ে দিন। মহিলাদের ক্ষেত্রে: হাত দুটি শরীরের কাছাকাছি রাখুন। পিঠ সোজা থাকবে। </div></div>
-          <div class="archive-step"><div class="step-num">5</div><div class="step-text"><strong>সিজদাদ্বয়ের মাঝে:</strong> দুই সিজদার মধ্যবর্তী সময়ে বিনয়ীভাবে বসো, অন্তত একবার বলো <strong>"Rabbighfirli"</strong> (হে আমার প্রভু, আমাকে ক্ষমা করো)।</div></div>
-          <div class="archive-step"><div class="step-num">6</div><div class="step-text"><strong>হৃদয়ের উপস্থিতি:</strong> যখন সিজদাহ্ করো, তুমি আল্লাহর সবচেয়ে নিকটে থাকো। দুনিয়াবি বিষয় মন থেকে খালি করো। উঠে যাওয়ার আগে দু'আ করো — এটা হলো সবচেয়ে বেশি সম্ভাব্য কবুল হওয়ার অবস্থা। </div></div>
-          <div class="archive-note">⚡ "একজন বান্দা তার প্রভুর সবচেয়ে নিকটবর্তী হয় সিজদায়, সুতরাং এই অবস্থায় অধিক দোয়া করো।" — সহীহ মুসলিম ৪৮২</div>
-        </div>
-      </div>
-
-      <div style="height:1rem;"></div>
+      <div id="archiveContent"></div>
+      <div style="height:1rem"></div>
     </div>
 
-    <!-- SHIELD PAGE -->
+    <!-- ════════════════════════════
+         PAGE: SHIELD
+    ════════════════════════════ -->
     <div class="page" id="page-shield">
-      <div class="shield-header app-header">
+      <div class="app-header">
         <div class="header-row">
-          <div class="shield-title-row">
-            <div class="shield-icon-big">🛡</div>
-            <div class="shield-title">SHIELD PROTOCOL</div>
-          </div>
+          <div class="app-title" style="color:var(--gold)">🛡 <span data-i18n="shield">SHIELD</span></div>
+          <div class="version-badge" style="color:var(--gold);border-color:rgba(255,215,0,.3);background:rgba(255,215,0,.05)">40 DAY</div>
         </div>
-        <div class="shield-sub">ঐশ্বরিক প্রমাণীকরণ আনলক করতে এবং আপনার পুরস্কারের মর্যাদা দাবি করতে ৪০ দিনের ধারাবাহিকতা বজায় রাখুন। </div>
+        <div class="header-sub" data-i18n="shield_sub">Maintain 40-day streak to unlock the Shield Protocol.</div>
       </div>
 
-      <!-- 40-DAY PROGRESS -->
-      <div class="lock-card" id="shieldProgressCard">
-        <div class="lock-card-title">STREAK PROGRESS</div>
-        <div class="lock-card-days grad-text" id="shieldDays">0</div>
-        <div class="lock-card-of">OF 40 DAYS REQUIRED</div>
-        <div class="forty-bar-bg">
-          <div class="forty-bar-fill" id="fortyBar" style="width:0%;"></div>
-        </div>
-        <div style="font-size:.65rem;color:var(--muted);" id="shieldStatus">এগিয়ে যান। বাধ্যতামূলক সালাতে বিরতি দেবেন না। </div>
-      </div>
-
-      <!-- MILESTONE GRID -->
-      <div style="padding:0 1rem;">
-        <div style="font-size:.6rem;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin-bottom:.6rem;font-family:'Syncopate',sans-serif;">MILESTONE NODES</div>
+      <div class="shield-prog-card" id="shieldProgCard">
+        <div class="shield-days-big" id="shieldDays">0</div>
+        <div class="shield-of" data-i18n="of_40">OF 40 DAYS REQUIRED</div>
+        <div class="forty-bar-bg"><div class="forty-bar-fill" id="fortyBar" style="width:0%"></div></div>
         <div class="milestone-grid" id="milestoneGrid"></div>
+        <div class="shield-status-txt" id="shieldStatusTxt"></div>
       </div>
 
-      <!-- CLAIM SECTION -->
-      <div class="claim-section" style="margin-top:1rem;">
-        <div class="claim-card" id="claimCard">
-          <div class="claim-title">AUTHENTICATION CLAIM</div>
-          <div id="claimLocked" class="locked-overlay">
-            <span class="lock-emoji">🔐</span>
-            দাবির সত্যতা যাচাই প্রক্রিয়া আনলক করতে টানা <span id="claimDaysLeft" style="color:var(--purple);font-weight:600;">40</span>  দিন সম্পূর্ণ করুন।
+      <!-- ACHIEVEMENTS -->
+      <div style="padding:0 1rem .75rem">
+        <div class="section-div-text" style="letter-spacing:.25em;font-family:var(--font-head);font-size:.55rem;color:var(--muted);margin-bottom:.7rem" data-i18n="achievements">ACHIEVEMENTS</div>
+        <div class="achievements-grid" id="achievementsGrid"></div>
+      </div>
+
+      <!-- CLAIM -->
+      <div class="claim-card" id="claimCard">
+        <div class="claim-title" data-i18n="auth_claim">AUTHENTICATION CLAIM</div>
+        <div id="claimLocked">
+          <div class="locked-msg">
+            <span class="l-icon">🔐</span>
+            <span data-i18n="claim_locked_msg">Complete </span><span id="claimDaysLeft" style="color:var(--purple);font-weight:600">40</span><span> consecutive days to unlock.</span>
           </div>
-          <div id="claimUnlocked" style="display:none;">
-            <div class="form-group">
-              <label class="form-label">FULL NAME</label>
-              <input class="form-input" type="text" placeholder="Enter your name..." id="claimName">
+        </div>
+        <div id="claimUnlocked" style="display:none">
+          <div class="form-group">
+            <label class="form-label" data-i18n="full_name">FULL NAME</label>
+            <input class="form-input" type="text" id="claimName" placeholder="Enter your name...">
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="testimony">TESTIMONY</label>
+            <textarea class="form-input" rows="3" id="claimTestimony" placeholder="Your reflection..."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="date_achieved">DATE ACHIEVED</label>
+            <input class="form-input" type="text" id="claimDate" readonly>
+          </div>
+          <button class="claim-submit-btn" onclick="submitClaim()">⟶ <span data-i18n="submit_auth">SUBMIT AUTHENTICATION</span></button>
+        </div>
+      </div>
+      <div style="height:1rem"></div>
+    </div>
+
+    <!-- ════════════════════════════
+         PAGE: NOTES
+    ════════════════════════════ -->
+    <div class="page" id="page-notes">
+      <div class="app-header">
+        <div class="header-row">
+          <div class="app-title grad-text" data-i18n="data_core">DATA CORE</div>
+          <div class="notes-add-btn" onclick="showAddNote()">+ <span data-i18n="add_note">ADD NOTE</span></div>
+        </div>
+        <div class="header-sub" data-i18n="notes_sub">Personal reflections & reminders</div>
+      </div>
+      <div id="notesList"></div>
+      <div style="height:1rem"></div>
+    </div>
+
+    <!-- ════════════════════════════
+         PAGE: CHAT
+    ════════════════════════════ -->
+    <div class="page" id="page-chat">
+      <div class="app-header" style="padding-bottom:.5rem">
+        <div class="header-row">
+          <div class="app-title" style="color:var(--purple)" data-i18n="deen_ai">DEEN AI</div>
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)" id="aiStatusDot"></div>
+        </div>
+        <div class="header-sub" data-i18n="chat_sub">Prayer guidance powered by Gemini</div>
+      </div>
+      <div class="chat-container" id="chatContainer">
+        <div class="chat-messages" id="chatMessages">
+          <div class="chat-no-key" id="chatNoKey" style="display:none">
+            <div style="font-size:2rem;margin-bottom:.75rem">🔑</div>
+            <div data-i18n="add_api_key">Add your Gemini API key in Settings to enable Deen AI.</div>
+          </div>
+        </div>
+        <div class="chat-input-row">
+          <input class="chat-input" type="text" id="chatInput" placeholder="Ask about prayer..." onkeydown="if(event.key==='Enter')sendChat()" data-i18n-placeholder="chat_placeholder">
+          <button class="chat-send-btn" id="chatSendBtn" onclick="sendChat()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════
+         PAGE: SETTINGS
+    ════════════════════════════ -->
+    <div class="page" id="page-settings">
+      <div class="app-header">
+        <div class="header-row">
+          <div class="app-title" data-i18n="settings">SETTINGS</div>
+        </div>
+        <div class="header-sub" data-i18n="settings_sub">System Configuration</div>
+      </div>
+
+      <!-- Language -->
+      <div class="settings-section">
+        <div class="settings-title" data-i18n="language_engine">LANGUAGE ENGINE</div>
+        <div class="settings-card">
+          <div class="setting-row">
+            <div class="setting-icon" style="background:rgba(0,242,255,.1)">🌐</div>
+            <div class="setting-text">
+              <span class="setting-name" data-i18n="language">Language</span>
+              <span class="setting-desc" data-i18n="lang_desc">Interface & prayer labels</span>
             </div>
-            <div class="form-group">
-              <label class="form-label">TESTIMONY</label>
-              <textarea class="form-input" rows="3" placeholder="Write your reflection..." id="claimTestimony" style="resize:none;"></textarea>
+            <div class="setting-control">
+              <div class="lang-pills">
+                <div class="lang-pill active" id="langEN" onclick="setLang('en')">EN</div>
+                <div class="lang-pill" id="langBN" onclick="setLang('bn')">বাং</div>
+              </div>
             </div>
-            <div class="form-group">
-              <label class="form-label">DATE ACHIEVED</label>
-              <input class="form-input" type="text" id="claimDate" readonly>
-            </div>
-            <button class="claim-btn" onclick="submitClaim()">⟶ SUBMIT AUTHENTICATION</button>
           </div>
         </div>
       </div>
 
-      <div style="height:1rem;"></div>
+      <!-- Theme -->
+      <div class="settings-section">
+        <div class="settings-title" data-i18n="theme_engine">ADAPTIVE THEME ENGINE</div>
+        <div class="settings-card">
+          <div class="setting-row">
+            <div class="setting-icon" style="background:rgba(188,19,254,.1)">🎨</div>
+            <div class="setting-text">
+              <span class="setting-name" data-i18n="color_scheme">Neural Interface Color</span>
+              <span class="setting-desc" id="themeDesc">Stealth Night active</span>
+            </div>
+            <div class="setting-control">
+              <div class="seg-ctrl">
+                <div class="seg-opt" id="themeAuto" onclick="setTheme('auto')" data-i18n="auto">AUTO</div>
+                <div class="seg-opt" id="themeDay" onclick="setTheme('day')" data-i18n="day">DAY</div>
+                <div class="seg-opt active" id="themeNight" onclick="setTheme('night')" data-i18n="night">NIGHT</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gemini API Key -->
+      <div class="settings-section">
+        <div class="settings-title">GEMINI API — DEEN AI</div>
+        <div class="settings-card">
+          <div class="setting-row" style="cursor:default">
+            <div class="setting-icon" style="background:rgba(0,255,136,.1)">🔑</div>
+            <div class="setting-text">
+              <span class="setting-name" data-i18n="api_key">Gemini API Key</span>
+              <span class="setting-desc" data-i18n="api_desc">Required for Deen AI chat</span>
+            </div>
+          </div>
+          <div class="api-input-wrap">
+            <input class="api-key-input" type="password" id="apiKeyInput" placeholder="AIza...">
+          </div>
+        </div>
+        <button class="api-save-btn" onclick="saveApiKey()" data-i18n="save_key">SAVE API KEY</button>
+      </div>
+
+      <!-- Privacy -->
+      <div class="settings-section">
+        <div class="settings-title" data-i18n="privacy_title">PRIVACY POLICY</div>
+        <div class="info-card">
+          <p><strong data-i18n="privacy_h1">Data Storage:</strong> <span data-i18n="privacy_p1">All data is stored locally on your device using localStorage. No data is transmitted to any server except when using the Deen AI feature (Gemini API).</span></p>
+          <p><strong data-i18n="privacy_h2">Gemini AI:</strong> <span data-i18n="privacy_p2">When Deen AI is enabled, your messages are sent to Google's Gemini API. Review Google's privacy policy for details on data handling.</span></p>
+          <p><strong data-i18n="privacy_h3">No Analytics:</strong> <span data-i18n="privacy_p3">This app contains no tracking, analytics, or advertising. Your worship data is private.</span></p>
+        </div>
+      </div>
+
+      <!-- Credits -->
+      <div class="settings-section">
+        <div class="settings-title" data-i18n="credits_title">CREDITS</div>
+        <div class="info-card dev-card">
+          <div class="dev-avatar">PO</div>
+          <div class="dev-name">PRAYERITY OS</div>
+          <div class="dev-role" style="margin-bottom:.75rem" data-i18n="version_label">v5.0 Cyber Deen Final</div>
+          <p data-i18n="credits_p1">Built with intention for the Ummah. A tool to track, improve, and gamify your daily ibadah.</p>
+          <p style="color:var(--cyan);font-size:.7rem" data-i18n="credits_p2">May Allah accept our prayers. آمين</p>
+        </div>
+      </div>
+
+      <div class="reset-section" style="padding:0 1rem 1.5rem">
+        <button class="reset-btn" onclick="showResetModal()" data-i18n="hard_reset">⚠ HARD SYSTEM RESET</button>
+      </div>
     </div>
 
   </div><!-- /pages -->
@@ -430,512 +763,1007 @@ nav{position:fixed;bottom:0;left:0;right:0;background:rgba(3,3,5,.95);backdrop-f
   <nav>
     <button class="nav-btn active" id="nav-rituals" onclick="switchTab('rituals')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-      RITUALS
-      <div class="nav-indicator"></div>
+      <span data-i18n="rituals_nav">RITUALS</span>
     </button>
     <button class="nav-btn" id="nav-manual" onclick="switchTab('manual')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-      MANUAL
-      <div class="nav-indicator"></div>
+      <span data-i18n="manual_nav">MANUAL</span>
     </button>
     <button class="nav-btn" id="nav-shield" onclick="switchTab('shield')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-      SHIELD
-      <div class="nav-indicator"></div>
+      <span data-i18n="shield_nav">SHIELD</span>
+    </button>
+    <button class="nav-btn" id="nav-notes" onclick="switchTab('notes')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      <span data-i18n="notes_nav">NOTES</span>
+    </button>
+    <button class="nav-btn" id="nav-chat" onclick="switchTab('chat')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span data-i18n="chat_nav">AI</span>
+    </button>
+    <button class="nav-btn" id="nav-settings" onclick="switchTab('settings')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <span data-i18n="settings_nav">CONFIG</span>
     </button>
   </nav>
 </div>
 
 <script>
-// ============================================================
-// DATA STRUCTURE
-// ============================================================
-const PRAYERS = [
-  {
-    id:'fajr',name:'FAJR',icon:'🌅',color:'rgba(0,242,255,.15)',
-    tasks:[
-      {id:'fajr_s2',label:'Sunnah (2 Rak\'ah)',mandatory:true,xp:0},
-      {id:'fajr_f2',label:'Fard (2 Rak\'ah)',mandatory:true,xp:0},
-      {id:'fajr_ontime',label:'On Time',mandatory:false,xp:40},
-      {id:'fajr_jamah',label:'Jamah (Congregation)',mandatory:false,xp:50},
-      {id:'fajr_mosque',label:'Mosque',mandatory:false,xp:50},
-      
-    ]
+// ══════════════════════════════════════════
+// I18N TRANSLATIONS
+// ══════════════════════════════════════════
+const TRANSLATIONS = {
+  en: {
+    rituals:'RITUALS',rank:'RANK',streak:'STREAK',today_xp:'TODAY XP',prayers:'PRAYERS',
+    daily_prayers:'DAILY PRAYERS',sync_btn:'SYNC DAILY DATA',hard_reset:'⚠ HARD SYSTEM RESET',
+    system_cooling:'SYSTEM COOLING',sync_done:'Sync complete. Navigate past days to backfill.',
+    next_cycle:'TIME UNTIL NEXT CYCLE',neural_archive:'NEURAL ARCHIVE',
+    archive_sub:'Ritual Protocol Documentation — Offline Mode',
+    shield:'SHIELD',shield_sub:'Maintain 40-day streak to unlock the Shield Protocol.',
+    of_40:'OF 40 DAYS REQUIRED',achievements:'ACHIEVEMENTS',
+    auth_claim:'AUTHENTICATION CLAIM',claim_locked_msg:'Complete ',
+    full_name:'FULL NAME',testimony:'TESTIMONY',date_achieved:'DATE ACHIEVED',
+    submit_auth:'SUBMIT AUTHENTICATION',data_core:'DATA CORE',
+    add_note:'ADD NOTE',notes_sub:'Personal reflections & reminders',
+    deen_ai:'DEEN AI',chat_sub:'Prayer guidance powered by Gemini',
+    add_api_key:'Add your Gemini API key in Settings to enable Deen AI.',
+    chat_placeholder:'Ask about prayer...',settings:'SETTINGS',
+    settings_sub:'System Configuration',language_engine:'LANGUAGE ENGINE',
+    language:'Language',lang_desc:'Interface & prayer labels',
+    theme_engine:'ADAPTIVE THEME ENGINE',color_scheme:'Neural Interface Color',
+    auto:'AUTO',day:'DAY',night:'NIGHT',api_key:'Gemini API Key',
+    api_desc:'Required for Deen AI chat',save_key:'SAVE API KEY',
+    privacy_title:'PRIVACY POLICY',
+    privacy_h1:'Data Storage:',privacy_p1:'All data is stored locally on your device using localStorage. No data is transmitted to any server except when using the Deen AI feature.',
+    privacy_h2:'Gemini AI:',privacy_p2:"When Deen AI is enabled, your messages are sent to Google's Gemini API. Review Google's privacy policy for details.",
+    privacy_h3:'No Analytics:',privacy_p3:'This app contains no tracking, analytics, or advertising. Your worship data is private.',
+    credits_title:'CREDITS',version_label:'v5.0 Cyber Deen Final',
+    credits_p1:'Built with intention for the Ummah. A tool to track, improve, and gamify your daily ibadah.',
+    credits_p2:'May Allah accept our prayers. آمين',
+    rituals_nav:'RITUALS',manual_nav:'MANUAL',shield_nav:'SHIELD',
+    notes_nav:'NOTES',chat_nav:'AI',settings_nav:'CONFIG',
+    // Prayer names
+    FAJR:'FAJR',DHUHR:'DHUHR',ASR:'ASR',MAGHRIB:'MAGHRIB',ISHA:'ISHA',WITR:'WITR',
+    // Tasks
+    'Sunnah (2)':'Sunnah (2 Rak\'ah)','Fard (2)':'Fard (2 Rak\'ah)',
+    'Sunnah (4)':'Sunnah (4 Rak\'ah)','Fard (4)':'Fard (4 Rak\'ah)',
+    'Fard (3)':'Fard (3 Rak\'ah)','Sunnah (2b)':'Sunnah (2 Rak\'ah) After',
+    'Waazib (3)':'Waazib (3 Rak\'ah)','OnTime':'On Time',
+    'Jamah':'Jamah (Congregation)','Mosque':'Mosque',
+    MANDATORY_GROUP:'MANDATORY — FARD',OPTIONAL_GROUP:'OPTIONAL — XP REWARDS',
   },
-  {
-    id:'dhuhr',name:'DHUHR',icon:'☀️',color:'rgba(255,215,0,.1)',
-    tasks:[
-      {id:'dhuhr_s4',label:'Sunnah (4 Rak\'ah)',mandatory:true,xp:0},
-      {id:'dhuhr_f4',label:'Fard (4 Rak\'ah)',mandatory:true,xp:0},
-      {id:'dhuhr_s2',label:'Sunnah (2 Rak\'ah)',mandatory:true,xp:0},
-      {id:'dhuhr_ontime',label:'On Time',mandatory:false,xp:40},
-      {id:'dhuhr_jamah',label:'Jamah (Congregation)',mandatory:false,xp:50},
-      {id:'dhuhr_mosque',label:'Mosque',mandatory:false,xp:50},
-    ]
-  },
-  {
-    id:'asr',name:'ASR',icon:'🌤',color:'rgba(255,165,0,.1)',
-    tasks:[
-      {id:'asr_s4',label:'Sunnah (4 Rak\'ah)',mandatory:false,xp:35},
-      {id:'asr_f4',label:'Fard (4 Rak\'ah)',mandatory:true,xp:0},
-      {id:'asr_ontime',label:'On Time',mandatory:false,xp:40},
-      {id:'asr_jamah',label:'Jamah (Congregation)',mandatory:false,xp:50},
-      {id:'asr_mosque',label:'Mosque',mandatory:false,xp:50},
-    ]
-  },
-  {
-    id:'maghrib',name:'MAGHRIB',icon:'🌆',color:'rgba(188,19,254,.1)',
-    tasks:[
-      {id:'maghrib_f3',label:'Fard (3 Rak\'ah)',mandatory:true,xp:0},
-      {id:'maghrib_s2',label:'Sunnah (2 Rak\'ah)',mandatory:true,xp:0},
-      {id:'maghrib_ontime',label:'On Time',mandatory:false,xp:40},
-      {id:'maghrib_jamah',label:'Jamah (Congregation)',mandatory:false,xp:50},
-      {id:'maghrib_mosque',label:'Mosque',mandatory:false,xp:50},
-    ]
-  },
-  {
-    id:'isha',name:'ISHA',icon:'🌃',color:'rgba(0,242,255,.08)',
-    tasks:[
-      {id:'isha_f4',label:'Fard (4 Rak\'ah)',mandatory:true,xp:0},
-      {id:'isha_s2',label:'Sunnah (2 Rak\'ah)',mandatory:true,xp:0},
-      {id:'isha_ontime',label:'On Time',mandatory:false,xp:40},
-      {id:'isha_jamah',label:'Jamah (Congregation)',mandatory:false,xp:50},
-      {id:'isha_mosque',label:'Mosque',mandatory:false,xp:50},
-    ]
-  },
-  {
-    id:'witr',name:'WITR',icon:'⭐',color:'rgba(188,19,254,.12)',
-    tasks:[
-      {id:'witr_w3',label:'Waazib (3 Rak\'ah)',mandatory:true,xp:0},
-      {id:'witr_ontime',label:'On Time',mandatory:false,xp:40},
-
-    ]
+  bn: {
+    rituals:'রিচুয়ালস',rank:'পদমর্যাদা',streak:'ধারাবাহিক',today_xp:'আজকের XP',prayers:'নামাজ',
+    daily_prayers:'দৈনিক নামাজ',sync_btn:'ডেটা সিঙ্ক করুন',hard_reset:'⚠ সিস্টেম রিসেট',
+    system_cooling:'সিস্টেম কুলিং',sync_done:'সিঙ্ক সম্পন্ন। পূর্ববর্তী দিন নেভিগেট করুন।',
+    next_cycle:'পরের চক্র পর্যন্ত',neural_archive:'নিউরাল আর্কাইভ',
+    archive_sub:'রিচুয়াল প্রোটোকল ডকুমেন্টেশন',
+    shield:'শিল্ড',shield_sub:'৪০ দিনের ধারাবাহিক স্ট্রিক বজায় রাখুন।',
+    of_40:'৪০ দিনের মধ্যে',achievements:'অর্জন',
+    auth_claim:'অথেনটিকেশন ক্লেইম',claim_locked_msg:'সম্পূর্ণ করুন ',
+    full_name:'পুরো নাম',testimony:'প্রশংসাপত্র',date_achieved:'অর্জনের তারিখ',
+    submit_auth:'সাবমিট করুন',data_core:'ডেটা কোর',
+    add_note:'নোট যোগ করুন',notes_sub:'ব্যক্তিগত প্রতিফলন এবং অনুস্মারক',
+    deen_ai:'দ্বীন AI',chat_sub:'জেমিনি দ্বারা পরিচালিত',
+    add_api_key:'Deen AI সক্রিয় করতে Settings-এ API কী যোগ করুন।',
+    chat_placeholder:'নামাজ সম্পর্কে জিজ্ঞেস করুন...',settings:'সেটিংস',
+    settings_sub:'সিস্টেম কনফিগারেশন',language_engine:'ভাষা ইঞ্জিন',
+    language:'ভাষা',lang_desc:'ইন্টারফেস ও নামাজের লেবেল',
+    theme_engine:'অ্যাডাপটিভ থিম ইঞ্জিন',color_scheme:'নিউরাল ইন্টারফেস রঙ',
+    auto:'অটো',day:'দিন',night:'রাত',api_key:'Gemini API কী',
+    api_desc:'Deen AI চ্যাটের জন্য প্রয়োজন',save_key:'API কী সেভ করুন',
+    privacy_title:'গোপনীয়তা নীতি',
+    privacy_h1:'ডেটা সংরক্ষণ:',privacy_p1:'সমস্ত ডেটা localStorage ব্যবহার করে আপনার ডিভাইসে স্থানীয়ভাবে সংরক্ষিত হয়।',
+    privacy_h2:'Gemini AI:',privacy_p2:'Deen AI সক্ষম থাকলে, আপনার বার্তাগুলি Google-এর Gemini API-তে পাঠানো হয়।',
+    privacy_h3:'কোনো অ্যানালিটিক্স নেই:',privacy_p3:'এই অ্যাপে কোনো ট্র্যাকিং বা বিজ্ঞাপন নেই।',
+    credits_title:'ক্রেডিটস',version_label:'v5.0 সাইবার দ্বীন ফাইনাল',
+    credits_p1:'উম্মাহর জন্য নির্মিত। আপনার দৈনিক ইবাদত ট্র্যাক করার একটি টুল।',
+    credits_p2:'আল্লাহ আমাদের নামাজ কবুল করুন। আমিন',
+    rituals_nav:'রিচুয়াল',manual_nav:'ম্যানুয়াল',shield_nav:'শিল্ড',
+    notes_nav:'নোটস',chat_nav:'AI',settings_nav:'কনফিগ',
+    FAJR:'ফজর',DHUHR:'যোহর',ASR:'আসর',MAGHRIB:'মাগরিব',ISHA:'ইশা',WITR:'বিতর',
+    'Sunnah (2)':'সুন্নত (২ রাকাত)','Fard (2)':'ফরজ (২ রাকাত)',
+    'Sunnah (4)':'সুন্নত (৪ রাকাত)','Fard (4)':'ফরজ (৪ রাকাত)',
+    'Fard (3)':'ফরজ (৩ রাকাত)','Sunnah (2b)':'সুন্নত (২ রাকাত)',
+    'Waazib (3)':'ওয়াজিব (৩ রাকাত)','OnTime':'সময়মতো',
+    'Jamah':'জামায়াত','Mosque':'মসজিদ',
+    MANDATORY_GROUP:'ফরজ — বাধ্যতামূলক',OPTIONAL_GROUP:'ঐচ্ছিক — XP পুরস্কার',
   }
-];
-
-// ============================================================
-// STATE
-// ============================================================
-let state = {
-  xp: 0,
-  totalXp: 0,
-  streak: 0,
-  lastSyncDate: null,
-  taskStates: {},
-  claimSubmitted: false,
 };
 
-function loadState(){
-  try{
-    const saved = localStorage.getItem('prayerityOS_v43');
-    if(saved) state = {...state, ...JSON.parse(saved)};
-  }catch(e){}
-}
+// ══════════════════════════════════════════
+// PRAYER DATA
+// ══════════════════════════════════════════
+const PRAYERS = [
+  {id:'fajr',nameKey:'FAJR',icon:'🌅',color:'rgba(0,242,255,.12)',tasks:[
+    {id:'fajr_s2',labelKey:'Sunnah (2)',mandatory:true},
+    {id:'fajr_f2',labelKey:'Fard (2)',mandatory:true},
+    {id:'fajr_ontime',labelKey:'OnTime',mandatory:false,xp:40},
+    {id:'fajr_jamah',labelKey:'Jamah',mandatory:false,xp:50},
+    {id:'fajr_mosque',labelKey:'Mosque',mandatory:false,xp:50},
+  ]},
+  {id:'dhuhr',nameKey:'DHUHR',icon:'☀️',color:'rgba(255,215,0,.08)',tasks:[
+    {id:'dhuhr_s4',labelKey:'Sunnah (4)',mandatory:true},
+    {id:'dhuhr_f4',labelKey:'Fard (4)',mandatory:true},
+    {id:'dhuhr_s2',labelKey:'Sunnah (2)',mandatory:true},
+    {id:'dhuhr_ontime',labelKey:'OnTime',mandatory:false,xp:40},
+    {id:'dhuhr_jamah',labelKey:'Jamah',mandatory:false,xp:50},
+    {id:'dhuhr_mosque',labelKey:'Mosque',mandatory:false,xp:50},
+  ]},
+  {id:'asr',nameKey:'ASR',icon:'🌤',color:'rgba(255,140,0,.08)',tasks:[
+    {id:'asr_s4',labelKey:'Sunnah (4)',mandatory:false,xp:35},
+    {id:'asr_f4',labelKey:'Fard (4)',mandatory:true},
+    {id:'asr_ontime',labelKey:'OnTime',mandatory:false,xp:40},
+    {id:'asr_jamah',labelKey:'Jamah',mandatory:false,xp:50},
+    {id:'asr_mosque',labelKey:'Mosque',mandatory:false,xp:50},
+  ]},
+  {id:'maghrib',nameKey:'MAGHRIB',icon:'🌆',color:'rgba(188,19,254,.1)',tasks:[
+    {id:'maghrib_f3',labelKey:'Fard (3)',mandatory:true},
+    {id:'maghrib_s2',labelKey:'Sunnah (2b)',mandatory:true},
+    {id:'maghrib_ontime',labelKey:'OnTime',mandatory:false,xp:40},
+    {id:'maghrib_jamah',labelKey:'Jamah',mandatory:false,xp:50},
+    {id:'maghrib_mosque',labelKey:'Mosque',mandatory:false,xp:50},
+  ]},
+  {id:'isha',nameKey:'ISHA',icon:'🌃',color:'rgba(0,242,255,.07)',tasks:[
+    {id:'isha_f4',labelKey:'Fard (4)',mandatory:true},
+    {id:'isha_s2',labelKey:'Sunnah (2b)',mandatory:true},
+    {id:'isha_ontime',labelKey:'OnTime',mandatory:false,xp:40},
+    {id:'isha_jamah',labelKey:'Jamah',mandatory:false,xp:50},
+    {id:'isha_mosque',labelKey:'Mosque',mandatory:false,xp:50},
+  ]},
+  {id:'witr',nameKey:'WITR',icon:'⭐',color:'rgba(188,19,254,.1)',tasks:[
+    {id:'witr_w3',labelKey:'Waazib (3)',mandatory:true},
+    {id:'witr_ontime',labelKey:'OnTime',mandatory:false,xp:40},
+  ]},
+];
 
-function saveState(){
-  localStorage.setItem('prayerityOS_v43', JSON.stringify(state));
-}
+// XP Levels
+const LEVELS=[
+  {level:1,name:'INITIATE',minXp:0},
+  {level:2,name:'SEEKER',minXp:500},
+  {level:3,name:'DEVOTEE',minXp:1500},
+  {level:4,name:'FAITHFUL',minXp:3000},
+  {level:5,name:'GUARDIAN',minXp:5500},
+  {level:6,name:'PROTECTOR',minXp:9000},
+  {level:7,name:'WARRIOR',minXp:14000},
+  {level:8,name:'SENTINEL',minXp:21000},
+  {level:9,name:'CHAMPION',minXp:30000},
+  {level:10,name:'DEEN MASTER',minXp:42000},
+];
 
-function hardReset(){
-  localStorage.removeItem('prayerityOS_v43');
-  state = {xp:0,totalXp:0,streak:0,lastSyncDate:null,taskStates:{},claimSubmitted:false};
-  saveState();
-  renderAll();
-  showToast('SYSTEM RESET COMPLETE','error');
-}
+// Achievements
+const ACHIEVEMENTS=[
+  {id:'first_sync',icon:'⚡',name:'FIRST SYNC',req:'First day synced',condition:s=>s.streak>=1},
+  {id:'week1',icon:'🔥',name:'7 DAY FORTRESS',req:'7-day streak',condition:s=>s.streak>=7},
+  {id:'fortnight',icon:'🌙',name:'LUNAR CORE',req:'14-day streak',condition:s=>s.streak>=14},
+  {id:'month',icon:'💎',name:'30 DAY DIAMOND',req:'30-day streak',condition:s=>s.streak>=30},
+  {id:'shield40',icon:'🛡',name:'SHIELD BEARER',req:'40-day streak',condition:s=>s.streak>=40},
+  {id:'xp1000',icon:'✨',name:'XP SURGE',req:'1000 total XP',condition:s=>s.totalXp>=1000},
+  {id:'xp5000',icon:'🏆',name:'CYBER MUAZZIN',req:'5000 total XP',condition:s=>s.totalXp>=5000},
+  {id:'level5',icon:'⚔',name:'GUARDIAN RANK',req:'Reach Level 5',condition:s=>getLevelForXp(s.totalXp).level>=5},
+  {id:'perfect_week',icon:'💯',name:'PERFECT WEEK',req:'All prayers 7 days',condition:s=>s.perfectDays>=7},
+];
 
-function confirmReset(){
-  if(confirm('⚠️ HARD RESET: This will wipe ALL data including XP, Streak, and Progress. Continue?')){
-    hardReset();
-  }
-}
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+let state = {
+  totalXp:0,streak:0,history:{},notes:[],
+  lang:'en',theme:'night',apiKey:'',
+  unlockedAchievements:[],perfectDays:0,
+  chatHistory:[],
+};
+let currentDateOffset = 0; // 0=today, -1=yesterday, etc.
 
-// ============================================================
+// ══════════════════════════════════════════
 // DATE HELPERS
-// ============================================================
-function getDateString(){
-  const d = new Date();
+// ══════════════════════════════════════════
+function getDateString(offset=0){
+  const d=new Date();
+  d.setDate(d.getDate()+offset);
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
-
-function isSynced(){
-  return state.lastSyncDate === getDateString();
+function todayStr(){return getDateString(0);}
+function getDayData(ds){return state.history[ds]||{taskStates:{},synced:false};}
+function setDayData(ds,data){state.history[ds]=data;}
+function isTodaySynced(){return !!(state.history[todayStr()]?.synced);}
+function formatNavDate(offset){
+  if(offset===0) return T('today')||'TODAY';
+  const d=new Date();d.setDate(d.getDate()+offset);
+  const days=['SUN','MON','TUE','WED','THU','FRI','SAT'];
+  const months=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  return `${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]}`;
 }
 
-function formatDisplayDate(){
-  const d = new Date();
-  const days = ['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
-  const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-  return `${days[d.getDay()]} — ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
-}
-
-// ============================================================
-// XP CALCULATION
-// ============================================================
-function calculateCurrentXP(){
-  let xp = 0;
-  PRAYERS.forEach(prayer=>{
-    prayer.tasks.forEach(task=>{
-      if(!task.mandatory && state.taskStates[task.id]){
-        xp += task.xp;
+// ══════════════════════════════════════════
+// STORAGE
+// ══════════════════════════════════════════
+function loadState(){
+  try{
+    const saved=localStorage.getItem('prayerityOS_v50');
+    if(saved){
+      const parsed=JSON.parse(saved);
+      // Migrate from v4.3 if needed
+      if(parsed.taskStates && !parsed.history){
+        parsed.history={};
+        const ts=todayStr();
+        parsed.history[ts]={taskStates:parsed.taskStates,synced:!!parsed.lastSyncDate&&parsed.lastSyncDate===ts};
+        delete parsed.taskStates;delete parsed.lastSyncDate;
       }
-    });
+      state={...state,...parsed};
+    }
+  }catch(e){}
+}
+function saveState(){
+  localStorage.setItem('prayerityOS_v50',JSON.stringify(state));
+}
+function hardReset(){
+  localStorage.removeItem('prayerityOS_v50');
+  state={totalXp:0,streak:0,history:{},notes:[],lang:state.lang,theme:state.theme,apiKey:state.apiKey,unlockedAchievements:[],perfectDays:0,chatHistory:[]};
+  currentDateOffset=0;
+  saveState();renderAll();
+  showToast('SYSTEM RESET COMPLETE','error');
+  triggerHaptic('error');
+}
+
+// ══════════════════════════════════════════
+// I18N
+// ══════════════════════════════════════════
+function T(key){return TRANSLATIONS[state.lang]?.[key]||TRANSLATIONS.en[key]||key;}
+function applyTranslations(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k=el.getAttribute('data-i18n');
+    el.textContent=T(k);
   });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
+    el.placeholder=T(el.getAttribute('data-i18n-placeholder'));
+  });
+  // lang pill
+  document.getElementById('langEN').classList.toggle('active',state.lang==='en');
+  document.getElementById('langBN').classList.toggle('active',state.lang==='bn');
+}
+function setLang(l){state.lang=l;saveState();renderAll();applyTranslations();}
+
+// ══════════════════════════════════════════
+// THEME
+// ══════════════════════════════════════════
+function setTheme(t){
+  state.theme=t;saveState();
+  const body=document.body;
+  body.removeAttribute('data-theme');
+  if(t==='day') body.setAttribute('data-theme','day');
+  else if(t==='auto') body.setAttribute('data-theme','auto');
+  ['themeAuto','themeDay','themeNight'].forEach(id=>{
+    document.getElementById(id).classList.toggle('active',id==='theme'+t.charAt(0).toUpperCase()+t.slice(1));
+  });
+  const descs={auto:'System Auto active',day:'Day High-Contrast active',night:'Stealth Night active'};
+  const themeDescEl=document.getElementById('themeDesc');
+  if(themeDescEl) themeDescEl.textContent=descs[t];
+}
+
+// ══════════════════════════════════════════
+// XP / LEVEL SYSTEM
+// ══════════════════════════════════════════
+function getLevelForXp(xp){
+  let cur=LEVELS[0];
+  for(const l of LEVELS){if(xp>=l.minXp)cur=l;}
+  return cur;
+}
+function getNextLevel(xp){
+  for(const l of LEVELS){if(xp<l.minXp)return l;}
+  return null;
+}
+function calcTodayXP(ds){
+  const day=getDayData(ds);
+  let xp=0;
+  PRAYERS.forEach(p=>p.tasks.forEach(t=>{if(!t.mandatory&&day.taskStates[t.id])xp+=t.xp;}));
   return xp;
 }
 
-function getMaxXP(){
-  let max = 0;
-  PRAYERS.forEach(p=>p.tasks.forEach(t=>{if(!t.mandatory) max+=t.xp;}));
-  return max;
+// ══════════════════════════════════════════
+// MANDATORY CHECK HELPERS
+// ══════════════════════════════════════════
+function allMandatoryDone(ds){
+  const day=getDayData(ds);
+  return PRAYERS.every(p=>p.tasks.filter(t=>t.mandatory).every(t=>day.taskStates[t.id]));
+}
+function checkPast3Days(){
+  // Returns array of dates from past 3 days that were synced but missed mandatory
+  const missed=[];
+  for(let i=1;i<=3;i++){
+    const ds=getDateString(-i);
+    const day=state.history[ds];
+    if(day&&day.synced&&!allMandatoryDone(ds)) missed.push(ds);
+  }
+  return missed;
+}
+function countCompletedPrayers(ds){
+  const day=getDayData(ds);
+  return PRAYERS.filter(p=>p.tasks.filter(t=>t.mandatory).every(t=>day.taskStates[t.id])).length;
 }
 
-function getPrayerXP(prayer){
-  return prayer.tasks.reduce((sum,t)=>(!t.mandatory && state.taskStates[t.id])?sum+t.xp:sum,0);
+// ══════════════════════════════════════════
+// PENALTY LOGIC
+// ══════════════════════════════════════════
+function checkPenalty(){
+  // Check past 3 synced days for missed mandatory
+  for(let i=1;i<=3;i++){
+    const ds=getDateString(-i);
+    const day=state.history[ds];
+    if(day&&day.synced){
+      if(!allMandatoryDone(ds)) return ds;
+    }
+  }
+  return null;
 }
 
-function getPrayerMaxXP(prayer){
-  return prayer.tasks.reduce((sum,t)=>(!t.mandatory)?sum+t.xp:sum,0);
-}
-
-function getPrayerCompletion(prayer){
-  const total = prayer.tasks.length;
-  const done = prayer.tasks.filter(t=>state.taskStates[t.id]).length;
-  return {done,total};
-}
-
-function countCompletedPrayers(){
-  return PRAYERS.filter(p=>{
-    const mandatory = p.tasks.filter(t=>t.mandatory);
-    return mandatory.every(t=>state.taskStates[t.id]);
-  }).length;
-}
-
-// ============================================================
+// ══════════════════════════════════════════
 // RENDER
-// ============================================================
+// ══════════════════════════════════════════
 function renderPrayerCards(){
-  const container = document.getElementById('prayerCards');
-  container.innerHTML = '';
-  const synced = isSynced();
+  const container=document.getElementById('prayerCards');
+  container.innerHTML='';
+  const ds=getDateString(currentDateOffset);
+  const day=getDayData(ds);
+  const isCurrentDaySynced=day.synced;
 
-  PRAYERS.forEach(prayer=>{
-    const {done,total} = getPrayerCompletion(prayer);
-    const pxp = getPrayerXP(prayer);
-    const allMandatoryDone = prayer.tasks.filter(t=>t.mandatory).every(t=>state.taskStates[t.id]);
-    const pct = Math.round((done/total)*100);
-    const r = 12, circ = 2*Math.PI*r;
-    const offset = circ - (pct/100)*circ;
+  PRAYERS.forEach((prayer,idx)=>{
+    const tasks=prayer.tasks;
+    const done=tasks.filter(t=>day.taskStates[t.id]).length;
+    const total=tasks.length;
+    const mandatory=tasks.filter(t=>t.mandatory);
+    const allMandDone=mandatory.every(t=>day.taskStates[t.id]);
+    const pct=Math.round((done/total)*100);
+    const r=11,circ=2*Math.PI*r;
+    const offset=circ-((pct/100)*circ);
+    const pxp=tasks.filter(t=>!t.mandatory&&day.taskStates[t.id]).reduce((s,t)=>s+t.xp,0);
 
-    const card = document.createElement('div');
-    card.className = `prayer-card${allMandatoryDone?' completed':''}`;
-    card.id = `card-${prayer.id}`;
+    const card=document.createElement('div');
+    card.className=`prayer-card${allMandDone?' completed':''}`;
+    card.id=`card-${prayer.id}`;
+    card.style.transitionDelay=`${idx*0.06}s`;
 
-    card.innerHTML = `
+    const mandatoryTasks=tasks.filter(t=>t.mandatory);
+    const optionalTasks=tasks.filter(t=>!t.mandatory);
+
+    card.innerHTML=`
       <div class="prayer-header" onclick="toggleCard('${prayer.id}')">
         <div class="prayer-icon" style="background:${prayer.color}">${prayer.icon}</div>
-        <div class="prayer-name">${prayer.name}</div>
+        <div class="prayer-name">${T(prayer.nameKey)}</div>
         ${pxp>0?`<div class="prayer-xp-badge">+${pxp} XP</div>`:''}
         <div class="prayer-progress">
-          <svg width="32" height="32" viewBox="0 0 32 32">
-            <circle cx="16" cy="16" r="${r}" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="2.5"/>
-            <circle cx="16" cy="16" r="${r}" fill="none" stroke="${allMandatoryDone?'var(--cyan)':'rgba(0,242,255,0.4)'}" stroke-width="2.5"
-              stroke-dasharray="${circ}" stroke-dashoffset="${offset}" style="transition:stroke-dashoffset .4s ease;stroke-linecap:round;"/>
+          <svg width="30" height="30" viewBox="0 0 30 30">
+            <circle class="pp-bg" cx="15" cy="15" r="${r}" fill="none" stroke-width="2.5"/>
+            <circle class="pp-fill" cx="15" cy="15" r="${r}" fill="none" stroke="${allMandDone?'var(--cyan)':'rgba(0,242,255,0.35)'}" stroke-width="2.5" stroke-dasharray="${circ.toFixed(2)}" stroke-dashoffset="${offset.toFixed(2)}"/>
           </svg>
           <div class="progress-text">${pct}%</div>
         </div>
-        <svg class="chevron" id="chev-${prayer.id}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg>
+        <svg class="chevron-btn" id="chev-${prayer.id}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
-      <div class="tasks-body" id="tasks-${prayer.id}" style="display:none;">
+      <div class="tasks-body" id="tasks-${prayer.id}" style="display:none">
         <div class="task-group">
-          <div class="task-group-label">MANDATORY — ZERO XP PENALTY</div>
-          ${prayer.tasks.filter(t=>t.mandatory).map(task=>renderTask(task,synced)).join('')}
+          <div class="task-group-lbl">${T('MANDATORY_GROUP')}</div>
+          ${mandatoryTasks.map(t=>renderTask(t,day.taskStates[t.id],isCurrentDaySynced)).join('')}
         </div>
+        ${optionalTasks.length?`
         <div class="task-group">
-          <div class="task-group-label">OPTIONAL — XP REWARDS</div>
-          ${prayer.tasks.filter(t=>!t.mandatory).map(task=>renderTask(task,synced)).join('')}
-        </div>
+          <div class="task-group-lbl">${T('OPTIONAL_GROUP')}</div>
+          ${optionalTasks.map(t=>renderTask(t,day.taskStates[t.id],isCurrentDaySynced)).join('')}
+        </div>`:''}
       </div>
     `;
     container.appendChild(card);
+    // Staggered reveal
+    setTimeout(()=>card.classList.add('revealed'),50+idx*70);
   });
 }
 
-function renderTask(task, synced){
-  const checked = !!state.taskStates[task.id];
-  const disabled = synced ? 'style="opacity:.4;pointer-events:none;"' : '';
+function renderTask(task,checked,synced){
+  const dis=synced?'style="opacity:.35;pointer-events:none"':'';
   return `
-    <div class="task-item" onclick="toggleTask('${task.id}')" ${disabled}>
+    <div class="task-item" onclick="toggleTask('${task.id}')" ${dis}>
       <div class="task-check${task.mandatory?' mandatory':''}${checked?' checked':''}">
-        <svg viewBox="0 0 12 12" fill="none" stroke="${task.mandatory?'#030305':'#030305'}" stroke-width="2.5"><polyline points="2 6 5 9 10 3"/></svg>
+        <svg viewBox="0 0 12 12" fill="none" stroke="#030305" stroke-width="2.5"><polyline points="2 6 5 9 10 3"/></svg>
       </div>
-      <div class="task-label">${task.label}${task.mandatory?'<span class="mandatory-dot"></span>':''}</div>
-      <div class="task-xp ${task.mandatory?'mandatory-lbl':''}">${task.mandatory?'FARD':'+'+(task.xp)+' XP'}</div>
+      <div class="task-label">${T(task.labelKey)}${task.mandatory?'<span class="m-dot"></span>':''}</div>
+      <div class="task-xp${task.mandatory?' m-lbl':''}">${task.mandatory?'FARD':'+'+task.xp+' XP'}</div>
     </div>
   `;
 }
 
 function toggleCard(id){
-  const body = document.getElementById(`tasks-${id}`);
-  const chev = document.getElementById(`chev-${id}`);
-  const visible = body.style.display !== 'none';
-  body.style.display = visible ? 'none' : 'block';
-  if(visible) chev.classList.remove('open'); else chev.classList.add('open');
+  const body=document.getElementById(`tasks-${id}`);
+  const chev=document.getElementById(`chev-${id}`);
+  const vis=body.style.display!=='none';
+  body.style.display=vis?'none':'block';
+  chev.classList.toggle('open',!vis);
 }
 
 function toggleTask(taskId){
-  if(isSynced()) return;
-  state.taskStates[taskId] = !state.taskStates[taskId];
+  const ds=getDateString(currentDateOffset);
+  const day=getDayData(ds);
+  if(day.synced) return;
+  day.taskStates[taskId]=!day.taskStates[taskId];
+  setDayData(ds,day);
   saveState();
   updateXPDisplay();
   renderPrayerCards();
+  if(day.taskStates[taskId]) triggerHaptic('success-mini');
 }
 
 function updateXPDisplay(){
-  const xp = calculateCurrentXP();
-  const max = getMaxXP();
-  const pct = max>0 ? Math.min((xp/max)*100,100) : 0;
-  state.xp = xp;
-  document.getElementById('xpDisplay').textContent = `${xp} XP`;
-  document.getElementById('xpBar').style.width = pct+'%';
-  document.getElementById('streakDisplay').textContent = state.streak;
-  document.getElementById('totalXpDisplay').textContent = state.totalXp;
-  document.getElementById('completedDisplay').textContent = `${countCompletedPrayers()}/6`;
-  document.getElementById('dateDisplay').textContent = formatDisplayDate();
+  const xp=state.totalXp;
+  const lv=getLevelForXp(xp);
+  const next=getNextLevel(xp);
+  const prog=next?((xp-lv.minXp)/(next.minXp-lv.minXp)*100):100;
+  document.getElementById('levelNum').textContent=lv.level;
+  document.getElementById('levelName').textContent=lv.name;
+  document.getElementById('xpTotalDisplay').textContent=xp+' XP';
+  document.getElementById('xpNextDisplay').textContent=next?`Next: ${next.minXp} XP`:'MAX LEVEL';
+  document.getElementById('xpBar').style.width=Math.min(prog,100)+'%';
+  document.getElementById('streakDisplay').textContent=state.streak;
+  const todayXP=calcTodayXP(todayStr());
+  document.getElementById('todayXpDisplay').textContent=todayXP;
+  document.getElementById('completedDisplay').textContent=countCompletedPrayers(todayStr())+'/6';
 }
 
-function renderLockScreen(){
-  const synced = isSynced();
-  document.getElementById('lockScreen').style.display = synced ? 'block' : 'none';
-  document.getElementById('ritualsList').style.display = synced ? 'none' : 'block';
-  if(synced) updateLockTimer();
+function renderDateNav(){
+  const ds=getDateString(currentDateOffset);
+  document.getElementById('navDateStr').textContent=currentDateOffset===0?T('today')||'TODAY':formatNavDate(currentDateOffset);
+  const dot=document.getElementById('navDot');
+  dot.className='date-nav-dot';
+  const dayData=state.history[ds];
+  if(currentDateOffset===0){dot.classList.add(isTodaySynced()?'synced':'today');}
+  else{dot.classList.add(dayData?.synced?'synced':'past');}
+  document.getElementById('nextDayBtn').disabled=currentDateOffset>=0;
+  document.getElementById('prevDayBtn').disabled=currentDateOffset<=-14;
+
+  const synced=dayData?.synced;
+  document.getElementById('lockScreen').style.display=(currentDateOffset===0&&synced)?'block':'none';
+  document.getElementById('ritualsList').style.display='block';
+  const syncBtn=document.getElementById('syncBtn');
+  syncBtn.disabled=currentDateOffset!==0||(currentDateOffset===0&&synced);
+  if(currentDateOffset!==0){
+    syncBtn.querySelector('[data-i18n="sync_btn"]')||syncBtn;
+    syncBtn.innerHTML=`✎ &nbsp;EDITING: ${formatNavDate(currentDateOffset)}`;
+  } else {
+    syncBtn.innerHTML=`⟳ &nbsp;<span data-i18n="sync_btn">${T('sync_btn')}</span>`;
+  }
 }
 
-function updateLockTimer(){
-  const now = new Date();
-  const midnight = new Date();
-  midnight.setHours(24,0,0,0);
-  const diff = midnight - now;
-  const h = Math.floor(diff/3600000);
-  const m = Math.floor((diff%3600000)/60000);
-  const s = Math.floor((diff%60000)/1000);
-  const timeStr = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-  const el = document.getElementById('lockTimer');
-  if(el) el.textContent = timeStr;
-  // Progress: percentage of day elapsed
-  const dayMs = 86400000;
-  const elapsed = dayMs - diff;
-  const pct = Math.min((elapsed/dayMs)*100,100);
-  const fill = document.getElementById('lockProgressFill');
-  if(fill) fill.style.width = pct+'%';
+function navigateDay(dir){
+  currentDateOffset+=dir;
+  renderDateNav();
+  renderPrayerCards();
+}
+
+function renderLockTimer(){
+  const now=new Date();
+  const midnight=new Date();midnight.setHours(24,0,0,0);
+  const diff=midnight-now;
+  const h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);
+  const el=document.getElementById('lockTimer');
+  if(el) el.textContent=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  const fill=document.getElementById('lockProgFill');
+  if(fill) fill.style.width=Math.min(((86400000-diff)/86400000)*100,100)+'%';
 }
 
 function renderShield(){
-  const streak = state.streak;
-  const pct = Math.min((streak/40)*100,100);
-  document.getElementById('shieldDays').textContent = streak;
-  document.getElementById('fortyBar').style.width = pct+'%';
-  const daysLeft = Math.max(0,40-streak);
-  document.getElementById('claimDaysLeft').textContent = daysLeft;
-
-  if(streak>=40){
-    document.getElementById('shieldStatus').textContent = '🔓 SHIELD PROTOCOL UNLOCKED';
-    document.getElementById('shieldStatus').style.color = 'var(--cyan)';
-    document.getElementById('claimLocked').style.display = 'none';
-    document.getElementById('claimUnlocked').style.display = 'block';
-    document.getElementById('claimDate').value = new Date().toLocaleDateString('en-GB');
+  const s=state.streak;
+  document.getElementById('shieldDays').textContent=s;
+  document.getElementById('fortyBar').style.width=Math.min((s/40)*100,100)+'%';
+  const left=Math.max(0,40-s);
+  document.getElementById('claimDaysLeft').textContent=left;
+  const statusEl=document.getElementById('shieldStatusTxt');
+  if(s>=40){
+    statusEl.textContent='🔓 '+T('shield')+ ' PROTOCOL UNLOCKED';
+    statusEl.style.color='var(--cyan)';
+    document.getElementById('claimLocked').style.display='none';
+    document.getElementById('claimUnlocked').style.display='block';
+    document.getElementById('claimDate').value=new Date().toLocaleDateString();
   } else {
-    document.getElementById('shieldStatus').textContent = `${daysLeft} days remaining. Miss no mandatory prayer.`;
-    document.getElementById('claimLocked').style.display = 'block';
-    document.getElementById('claimUnlocked').style.display = 'none';
+    statusEl.textContent=left+' days remaining. No missed Fard.';
+    document.getElementById('claimLocked').style.display='block';
+    document.getElementById('claimUnlocked').style.display='none';
   }
-
   // Milestone grid
-  const grid = document.getElementById('milestoneGrid');
-  grid.innerHTML = '';
+  const grid=document.getElementById('milestoneGrid');
+  grid.innerHTML='';
   for(let i=1;i<=40;i++){
-    const dot = document.createElement('div');
-    dot.className = `milestone-dot${i<=streak?(i%10===0?' done-cyan':' done'):''}`;
-    dot.textContent = i;
-    grid.appendChild(dot);
+    const d=document.createElement('div');
+    d.className=`m-dot-grid${i<=s?(i%10===0?' peak':' done'):''}`;
+    d.textContent=i;
+    grid.appendChild(d);
   }
 }
+
+function renderAchievements(){
+  const grid=document.getElementById('achievementsGrid');
+  grid.innerHTML='';
+  ACHIEVEMENTS.forEach((a,idx)=>{
+    const unlocked=a.condition(state);
+    if(unlocked&&!state.unlockedAchievements.includes(a.id)){
+      state.unlockedAchievements.push(a.id);
+      saveState();
+    }
+    const card=document.createElement('div');
+    card.className=`badge-card${unlocked?' unlocked':''}`;
+    card.style.transitionDelay=`${idx*0.05}s`;
+    card.innerHTML=`<span class="badge-icon">${a.icon}</span><div class="badge-name">${a.name}</div><div class="badge-req">${a.req}</div>`;
+    grid.appendChild(card);
+    setTimeout(()=>card.classList.add('revealed'),80+idx*60);
+  });
+}
+
+function renderArchive(){
+  const lang=state.lang;
+  const archives=[
+    {icon:'💧',nameKey:'WUDU',steps:[
+      {t:'Niyyah',b:'Make intention in your heart to purify for prayer. Verbal recitation is recommended.'},
+      {t:'Bismillah',b:'Say "Bismillah" before starting. A Sunnah that should not be omitted.'},
+      {t:'Wash Hands ×3',b:'Wash both hands to and including the wrists, starting with the right.'},
+      {t:'Rinse Mouth ×3',b:'Take water, swirl thoroughly, and expel. Repeat three times.'},
+      {t:'Sniff Water ×3',b:'Gently sniff water into nostrils with right hand; blow out with left.'},
+      {t:'Wash Face ×3',b:'Wash entire face from hairline to chin and ear to ear three times.'},
+      {t:'Wash Arms ×3',b:'Right arm to elbow ×3, then left arm the same way.'},
+      {t:'Wipe Head ×1',b:'Wet hands front to back then back to front over entire head — once.'},
+      {t:'Wipe Ears ×1',b:'Index fingers inside ears, thumbs wipe the backs.'},
+      {t:'Wash Feet ×3',b:'Right foot to ankle ×3, then left foot — ensure gaps between toes.'},
+    ],note:'⚡ If Wudu breaks (wind, toilet, sleep), renew before Salah. Ghusl replaces Wudu when required.'},
+    {icon:'🌙',nameKey:'QIYAM',steps:[
+      {t:'Timing',b:'Performed after Isha, before Fajr. The last third of the night is most virtuous.'},
+      {t:'Intention',b:'Intend Qiyam al-Layl or Tahajjud in your heart before sleeping or starting.'},
+      {t:'Opening',b:'Begin with 2 short Rak\'ahs as the Prophet ﷺ did.'},
+      {t:'Units',b:'Pray in sets of 2 Rak\'ahs. 8 total is Sunnah Mu\'akkadah. Recite long Surahs.'},
+      {t:'Dua in Sujood',b:'Prostration at night is extreme closeness to Allah. Make heartfelt dua.'},
+      {t:'Witr',b:'Seal with Witr (1 or 3 Rak\'ahs). Do not sleep without Witr after Isha.'},
+    ],note:'⚡ Even 2 sincere Rak\'ahs of Qiyam are better than the entire dunya. Consistency over quantity.'},
+    {icon:'✦',nameKey:'SUJUD',steps:[
+      {t:'7 Contact Points',b:'Forehead + nose, both palms, both knees, toes of both feet — all simultaneously.'},
+      {t:'Descend Correctly',b:'Knees first, then palms, then forehead and nose. Do not collapse forward.'},
+      {t:'Tasbih',b:'Recite "Subhana Rabbiyal A\'la" minimum 3 times. More repetitions deepen worship.'},
+      {t:'Body Position',b:'Forearms raised off ground. Men: elbows outward. Women: arms close to body.'},
+      {t:'Between Sujood',b:'Sit and say "Rabbighfirli" (My Lord, forgive me) at least once.'},
+      {t:'Presence of Heart',b:'Emptiness of dunya. You are closest to Allah here. Make dua before rising.'},
+    ],note:'⚡ "The nearest a servant is to his Lord is when in prostration, so make much supplication." — Sahih Muslim 482'},
+  ];
+
+  const container=document.getElementById('archiveContent');
+  container.innerHTML='';
+  archives.forEach(arc=>{
+    const el=document.createElement('div');
+    el.className='archive-card animate-in';
+    el.innerHTML=`
+      <div class="archive-header" onclick="toggleArchive(this)">
+        <div class="archive-icon">${arc.icon}</div>
+        <div class="archive-name">${arc.nameKey}</div>
+        <svg class="chevron-btn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="archive-body" style="display:none">
+        ${arc.steps.map((s,i)=>`<div class="archive-step"><div class="step-num">${i+1}</div><div class="step-text"><strong>${s.t}:</strong> ${s.b}</div></div>`).join('')}
+        <div class="archive-note">${arc.note}</div>
+      </div>
+    `;
+    container.appendChild(el);
+  });
+}
+
+function toggleArchive(header){
+  const body=header.nextElementSibling;
+  const chev=header.querySelector('.chevron-btn');
+  const vis=body.style.display!=='none';
+  body.style.display=vis?'none':'block';
+  chev.classList.toggle('open',!vis);
+}
+
+function renderNotes(){
+  const container=document.getElementById('notesList');
+  if(!state.notes.length){
+    container.innerHTML=`<div class="empty-state"><span class="empty-icon">📝</span>${T('notes_sub')||'No notes yet.'}</div>`;
+    return;
+  }
+  container.innerHTML='';
+  state.notes.slice().reverse().forEach((note,ridx)=>{
+    const idx=state.notes.length-1-ridx;
+    const card=document.createElement('div');
+    card.className='note-card animate-in';
+    card.innerHTML=`
+      <div class="note-date">${note.date}</div>
+      <div class="note-text">${escapeHtml(note.text)}</div>
+      <div class="note-del" onclick="deleteNote(${idx})">✕</div>
+    `;
+    container.appendChild(card);
+    setTimeout(()=>card.classList.add('revealed'),40+ridx*60);
+  });
+}
+
+function escapeHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
 function renderAll(){
+  applyTranslations();
+  document.getElementById('dateDisplay').textContent=formatDisplayDate();
   renderPrayerCards();
   updateXPDisplay();
-  renderLockScreen();
+  renderDateNav();
   renderShield();
+  renderAchievements();
+  renderArchive();
+  renderNotes();
+  initIntersectionObserver();
 }
 
-// ============================================================
-// SYNC
-// ============================================================
-function syncData(){
-  // Check mandatory tasks
-  const mandatoryTasks = [];
-  PRAYERS.forEach(p=>p.tasks.forEach(t=>{if(t.mandatory) mandatoryTasks.push(t.id);}));
-  const missedMandatory = mandatoryTasks.some(id=>!state.taskStates[id]);
+function formatDisplayDate(){
+  const d=new Date();
+  const days=['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
+  const months=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  return `${days[d.getDay()]} — ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+}
 
-  if(missedMandatory){
-    showToast('MANDATORY TASKS INCOMPLETE — CHECK ALL #FARD','error');
-    // Ask if they want to sync anyway (partial day)
-    if(!confirm('⚠️ You have uncompleted Mandatory (Fard) tasks.\n\nSyncing now will RESET your streak to 0.\n\nProceed anyway?')) return;
-    state.streak = 0;
-    showToast('STREAK RESET — MISSED FARD','error');
-  } else {
-    state.streak++;
-    showToast('SYNC COMPLETE — STREAK: '+state.streak);
+// ══════════════════════════════════════════
+// SYNC
+// ══════════════════════════════════════════
+function handleSync(){
+  if(isTodaySynced()) return;
+  // Check penalty: past 3 days with synced but missing mandatory
+  const penaltyDate=checkPenalty();
+  if(penaltyDate){
+    showModal({
+      icon:'💀',title:'STREAK PENALTY',titleClass:'danger',
+      body:`Missed mandatory prayers detected in history (${penaltyDate}). Go back and complete them to keep your streak, or sync now to reset it.`,
+      actions:[
+        {label:'GO BACK',cls:'cancel',fn:()=>{}},
+        {label:'SYNC & RESET STREAK',cls:'confirm-danger',fn:()=>syncNow(true)},
+      ]
+    });
+    return;
+  }
+  const todayDs=todayStr();
+  const hasMissed=PRAYERS.some(p=>p.tasks.filter(t=>t.mandatory).some(t=>!getDayData(todayDs).taskStates[t.id]));
+  if(hasMissed){
+    showModal({
+      icon:'⚠',title:'INCOMPLETE MANDATORY',titleClass:'warning',
+      body:'You have uncompleted Fard (Mandatory) tasks today. Syncing without them will reset your streak to 0.',
+      actions:[
+        {label:'CANCEL',cls:'cancel',fn:()=>{}},
+        {label:'SYNC ANYWAY',cls:'confirm-warning',fn:()=>syncNow(true)},
+      ]
+    });
+    return;
+  }
+  syncNow(false);
+}
+
+function syncNow(resetStreak){
+  const todayDs=todayStr();
+  const earned=calcTodayXP(todayDs);
+  if(resetStreak){state.streak=0;}
+  else{state.streak++;state.totalXp+=earned;}
+  if(!resetStreak) state.totalXp+=0; // XP already added above
+  // Actually just add XP regardless since earned is today's optional XP
+  // Re-compute correctly:
+  if(!resetStreak){
+    // Undo double-add: totalXp was already incremented once above
+    state.totalXp-=earned; // Remove the zero-line add
+    state.totalXp+=earned; // Re-add correctly
   }
 
-  const earned = calculateCurrentXP();
-  state.totalXp += earned;
-  state.xp = earned;
-  state.lastSyncDate = getDateString();
+  const day=getDayData(todayDs);
+  day.synced=true;
+  setDayData(todayDs,day);
+
+  // Check perfect day
+  if(countCompletedPrayers(todayDs)===6) state.perfectDays=(state.perfectDays||0)+1;
+
   saveState();
+  if(resetStreak){
+    showToast('STREAK RESET — MISSED FARD','error');
+    triggerHaptic('error');
+  } else {
+    showToast(`SYNC COMPLETE — STREAK: ${state.streak}  +${earned} XP`,'success');
+    triggerHaptic('success');
+  }
   renderAll();
 }
 
-// ============================================================
-// ARCHIVE TOGGLE
-// ============================================================
-function toggleArchive(header){
-  const body = header.nextElementSibling;
-  const chev = header.querySelector('.chevron');
-  const visible = body.style.display !== 'none';
-  body.style.display = visible ? 'none' : 'block';
-  if(visible) chev.classList.remove('open'); else chev.classList.add('open');
+// ══════════════════════════════════════════
+// NOTES
+// ══════════════════════════════════════════
+function showAddNote(){
+  showModal({
+    icon:'📝',title:'ADD NOTE',titleClass:'',
+    body:'',
+    textarea:true,
+    actions:[
+      {label:'CANCEL',cls:'cancel',fn:()=>{}},
+      {label:'SAVE NOTE',cls:'confirm-primary',fn:()=>{
+        const txt=document.getElementById('modalTextarea').value.trim();
+        if(!txt){showToast('ENTER SOME TEXT','error');return;}
+        state.notes.push({text:txt,date:formatDisplayDate()});
+        saveState();renderNotes();
+        showToast('NOTE SAVED');
+      }},
+    ]
+  });
+}
+function deleteNote(idx){
+  showModal({
+    icon:'🗑',title:'DELETE NOTE',titleClass:'danger',
+    body:'Remove this note permanently?',
+    actions:[
+      {label:'CANCEL',cls:'cancel',fn:()=>{}},
+      {label:'DELETE',cls:'confirm-danger',fn:()=>{
+        state.notes.splice(idx,1);saveState();renderNotes();
+        showToast('NOTE DELETED','error');
+      }},
+    ]
+  });
 }
 
-// ============================================================
+// ══════════════════════════════════════════
 // CLAIM
-// ============================================================
+// ══════════════════════════════════════════
 function submitClaim(){
-  const name = document.getElementById('claimName').value.trim();
-  const testimony = document.getElementById('claimTestimony').value.trim();
-  if(!name||!testimony){
-    showToast('FILL ALL FIELDS TO AUTHENTICATE','error');
-    return;
-  }
-  state.claimSubmitted = true;
-  saveState();
-  showToast('AUTHENTICATION SUBMITTED — MASHA ALLAH','purple');
+  const name=document.getElementById('claimName').value.trim();
+  const testimony=document.getElementById('claimTestimony').value.trim();
+  if(!name||!testimony){showToast('FILL ALL FIELDS','error');return;}
+  showModal({
+    icon:'🛡',title:'CLAIM SUBMITTED',titleClass:'success',
+    body:`Masha Allah, ${name}! Your 40-day authentication has been recorded. May Allah accept your ibadah.`,
+    actions:[{label:'ALHAMDULILLAH',cls:'confirm-primary',fn:()=>{}}]
+  });
+  triggerHaptic('success');
 }
 
-// ============================================================
-// TAB NAVIGATION
-// ============================================================
+// ══════════════════════════════════════════
+// API KEY
+// ══════════════════════════════════════════
+function saveApiKey(){
+  state.apiKey=document.getElementById('apiKeyInput').value.trim();
+  saveState();
+  showToast('API KEY SAVED','success');
+  updateChatVisibility();
+}
+function updateChatVisibility(){
+  const noKey=document.getElementById('chatNoKey');
+  if(noKey) noKey.style.display=state.apiKey?'none':'block';
+}
+
+// ══════════════════════════════════════════
+// GEMINI CHAT
+// ══════════════════════════════════════════
+const SYSTEM_INSTRUCTION=`You are "Deen AI", a knowledgeable Islamic prayer assistant embedded in the Prayerity OS app. 
+You ONLY discuss topics related to: Islamic prayer (Salah), Wudu (ablution), prayer times, prayer methods (Fajr, Dhuhr, Asr, Maghrib, Isha, Witr, Qiyam), 
+Islamic worship practices, Quranic recitation during prayer, and closely related spiritual topics.
+If asked about anything unrelated to Islamic prayer and worship, politely decline and redirect to prayer topics.
+Be warm, knowledgeable, and precise. Use Islamic greetings naturally.`;
+
+async function sendChat(){
+  if(!state.apiKey){showToast('ADD API KEY IN SETTINGS','error');return;}
+  const input=document.getElementById('chatInput');
+  const msg=input.value.trim();
+  if(!msg) return;
+  input.value='';
+  const sendBtn=document.getElementById('chatSendBtn');
+  sendBtn.disabled=true;
+
+  appendChatMsg('user',msg);
+  state.chatHistory.push({role:'user',parts:[{text:msg}]});
+
+  const typingId='typing-'+Date.now();
+  appendChatMsg('bot','<div class="typing-dots"><span></span><span></span><span></span></div>',typingId,true);
+
+  try{
+    const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${state.apiKey}`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        system_instruction:{parts:[{text:SYSTEM_INSTRUCTION}]},
+        contents:state.chatHistory,
+        generationConfig:{maxOutputTokens:600,temperature:0.7}
+      })
+    });
+    const data=await res.json();
+    const botText=data.candidates?.[0]?.content?.parts?.[0]?.text||'I could not process that. Please try again.';
+    removeChatMsg(typingId);
+    appendChatMsg('bot',botText);
+    state.chatHistory.push({role:'model',parts:[{text:botText}]});
+    if(state.chatHistory.length>20) state.chatHistory=state.chatHistory.slice(-20);
+    saveState();
+  }catch(e){
+    removeChatMsg(typingId);
+    appendChatMsg('bot','⚠ Connection error. Check your API key in Settings.');
+  }
+  sendBtn.disabled=false;
+}
+
+function appendChatMsg(role,content,id,isTyping=false){
+  const msgs=document.getElementById('chatMessages');
+  const div=document.createElement('div');
+  div.className=`chat-msg ${role}`;
+  if(id) div.id=id;
+  const bubble=document.createElement('div');
+  bubble.className=`msg-bubble${isTyping?' typing':''}`;
+  bubble.innerHTML=content;
+  div.appendChild(bubble);
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+function removeChatMsg(id){
+  const el=document.getElementById(id);
+  if(el) el.remove();
+}
+
+// ══════════════════════════════════════════
+// MODAL SYSTEM
+// ══════════════════════════════════════════
+let _modalResolveFn=null;
+function showModal({icon,title,titleClass,body,actions,textarea}){
+  document.getElementById('modalIcon').textContent=icon;
+  const titleEl=document.getElementById('modalTitle');
+  titleEl.textContent=title;
+  titleEl.className=`modal-title${titleClass?' '+titleClass:''}`;
+  document.getElementById('modalBody').textContent=body;
+  const ta=document.getElementById('modalTextarea');
+  ta.style.display=textarea?'block':'none';
+  ta.value='';
+  const actionsEl=document.getElementById('modalActions');
+  actionsEl.innerHTML='';
+  actions.forEach(a=>{
+    const btn=document.createElement('button');
+    btn.className=`modal-btn ${a.cls}`;
+    btn.textContent=a.label;
+    btn.onclick=()=>{closeModal();a.fn();};
+    actionsEl.appendChild(btn);
+  });
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal(){document.getElementById('modal').classList.remove('open');}
+function modalOutsideClick(e){if(e.target.id==='modal') closeModal();}
+function showResetModal(){
+  showModal({
+    icon:'💀',title:'HARD SYSTEM RESET',titleClass:'danger',
+    body:'This will permanently wipe ALL data: XP, Streak, History, Notes. This cannot be undone.',
+    actions:[
+      {label:'CANCEL',cls:'cancel',fn:()=>{}},
+      {label:'WIPE EVERYTHING',cls:'confirm-danger',fn:()=>hardReset()},
+    ]
+  });
+}
+
+// ══════════════════════════════════════════
+// HAPTIC FEEDBACK
+// ══════════════════════════════════════════
+function triggerHaptic(type){
+  const body=document.body;
+  if(type==='error'){
+    body.classList.add('haptic-error');
+    setTimeout(()=>body.classList.remove('haptic-error'),450);
+    if(navigator.vibrate) navigator.vibrate([50,30,50]);
+  } else if(type==='success'){
+    const panel=document.getElementById('xpPanel');
+    panel.classList.add('haptic-success');
+    setTimeout(()=>panel.classList.remove('haptic-success'),500);
+    if(navigator.vibrate) navigator.vibrate(60);
+  } else if(type==='success-mini'){
+    if(navigator.vibrate) navigator.vibrate(25);
+  }
+}
+
+// ══════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════
+let _toastTimer=null;
+function showToast(msg,type=''){
+  const el=document.getElementById('toast');
+  el.textContent=msg;
+  el.className=`toast ${type} show`;
+  clearTimeout(_toastTimer);
+  _toastTimer=setTimeout(()=>el.classList.remove('show'),2800);
+}
+
+// ══════════════════════════════════════════
+// NAV
+// ══════════════════════════════════════════
 function switchTab(tab){
-  ['rituals','manual','shield'].forEach(t=>{
+  const tabs=['rituals','manual','shield','notes','chat','settings'];
+  tabs.forEach(t=>{
     document.getElementById(`page-${t}`).classList.toggle('active',t===tab);
     document.getElementById(`nav-${t}`).classList.toggle('active',t===tab);
+    if(t===tab) document.getElementById(`page-${t}`).classList.add('page-enter');
   });
-  if(tab==='shield') renderShield();
+  setTimeout(()=>document.querySelectorAll('.page').forEach(p=>p.classList.remove('page-enter')),400);
+  if(tab==='shield'){renderShield();renderAchievements();}
+  if(tab==='notes') renderNotes();
+  if(tab==='manual') renderArchive();
+  if(tab==='chat') updateChatVisibility();
+  initIntersectionObserver();
 }
 
-// ============================================================
-// TOAST
-// ============================================================
-function showToast(msg, type=''){
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.className = `toast ${type} show`;
-  setTimeout(()=>el.classList.remove('show'),2800);
+// ══════════════════════════════════════════
+// INTERSECTION OBSERVER (Scroll Animations)
+// ══════════════════════════════════════════
+let _observer=null;
+function initIntersectionObserver(){
+  if(_observer) _observer.disconnect();
+  _observer=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{if(e.isIntersecting) e.target.classList.add('visible');});
+  },{threshold:0.1});
+  document.querySelectorAll('.animate-in').forEach(el=>_observer.observe(el));
 }
 
-// ============================================================
+// ══════════════════════════════════════════
 // PARTICLES
-// ============================================================
+// ══════════════════════════════════════════
 function initParticles(){
-  const canvas = document.getElementById('particles');
-  const ctx = canvas.getContext('2d');
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-  const particles = [];
-  for(let i=0;i<35;i++){
-    particles.push({
-      x:Math.random()*canvas.width,
-      y:Math.random()*canvas.height,
-      r:Math.random()*.8+.2,
-      dx:(Math.random()-.5)*.15,
-      dy:(Math.random()-.5)*.15,
-      o:Math.random()*.4+.1,
-      c:Math.random()>.5?'0,242,255':'188,19,254'
+  const canvas=document.getElementById('particles');
+  const ctx=canvas.getContext('2d');
+  let w=canvas.width=window.innerWidth,h=canvas.height=window.innerHeight;
+  const pts=Array.from({length:40},()=>({
+    x:Math.random()*w,y:Math.random()*h,
+    dx:(Math.random()-.5)*.2,dy:(Math.random()-.5)*.2,
+    r:Math.random()*.9+.2,o:Math.random()*.35+.08,
+    c:Math.random()>.5?'0,242,255':'188,19,254'
+  }));
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    pts.forEach(p=>{
+      p.x=(p.x+p.dx+w)%w;p.y=(p.y+p.dy+h)%h;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${p.c},${p.o})`;ctx.fill();
     });
+    requestAnimationFrame(draw);
   }
-  function animate(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    particles.forEach(p=>{
-      p.x+=p.dx; p.y+=p.dy;
-      if(p.x<0)p.x=canvas.width;
-      if(p.x>canvas.width)p.x=0;
-      if(p.y<0)p.y=canvas.height;
-      if(p.y>canvas.height)p.y=0;
-      ctx.beginPath();
-      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      ctx.fillStyle=`rgba(${p.c},${p.o})`;
-      ctx.fill();
-    });
-    requestAnimationFrame(animate);
-  }
-  animate();
-  window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
+  draw();
+  window.addEventListener('resize',()=>{w=canvas.width=window.innerWidth;h=canvas.height=window.innerHeight;});
 }
 
-// ============================================================
-// BOOT SEQUENCE
-// ============================================================
-const bootMessages = [
-  'INITIALIZING NEURAL CORE...',
-  'LOADING PRAYER MATRIX...',
-  'CALIBRATING STREAK ENGINE...',
-  'ESTABLISHING SYNC PROTOCOL...',
-  'CYBER DEEN ONLINE ✓'
-];
-let bootIdx = 0;
-const bootInterval = setInterval(()=>{
-  bootIdx++;
-  const el = document.getElementById('bootStatus');
-  if(el && bootIdx < bootMessages.length) el.textContent = bootMessages[bootIdx];
-}, 440);
+// ══════════════════════════════════════════
+// BOOT
+// ══════════════════════════════════════════
+const BOOT_MSGS=['INITIALIZING NEURAL CORE...','LOADING PRAYER MATRIX...','CALIBRATING STREAK ENGINE...','MIGRATING HISTORY STRUCTURE...','DEEN AI ONLINE — CYBER ✓'];
+let _bi=0;
+const _biv=setInterval(()=>{
+  _bi++;
+  const el=document.getElementById('bootStatus');
+  if(el&&_bi<BOOT_MSGS.length) el.textContent=BOOT_MSGS[_bi];
+},430);
 
-window.addEventListener('DOMContentLoaded', ()=>{
+window.addEventListener('DOMContentLoaded',()=>{
   loadState();
-  // Boot completes after exactly 2.5s
+  // Apply saved settings immediately
+  setTheme(state.theme||'night');
+  if(state.apiKey) document.getElementById('apiKeyInput').value=state.apiKey;
+  // Init chat history display
+  if(state.chatHistory?.length){
+    state.chatHistory.forEach(m=>{
+      if(m.role==='user') appendChatMsg('user',m.parts[0].text);
+      else appendChatMsg('bot',m.parts[0].text);
+    });
+  }
+
   setTimeout(()=>{
-    clearInterval(bootInterval);
-    const boot = document.getElementById('boot');
+    clearInterval(_biv);
+    const boot=document.getElementById('boot');
     boot.classList.add('fade-out');
     setTimeout(()=>{
       boot.style.display='none';
-      const app = document.getElementById('app');
-      app.classList.add('visible');
+      document.getElementById('app').classList.add('visible');
       renderAll();
       initParticles();
-    }, 600);
-  }, 2500);
+    },700);
+  },2500);
 
-  // Lock timer updater
+  // Live timers
   setInterval(()=>{
-    if(isSynced()) updateLockTimer();
-    // Auto-unlock at midnight
-    if(state.lastSyncDate && state.lastSyncDate !== getDateString()){
-      if(isSynced()===false){
-        renderLockScreen();
-      }
+    if(isTodaySynced()&&currentDateOffset===0) renderLockTimer();
+    // Auto-unlock at date change
+    if(state.history){
+      const lastKeys=Object.keys(state.history);
+      // If yesterday was synced but today is new day, update nav
+      document.getElementById('dateDisplay').textContent=formatDisplayDate();
     }
-  }, 1000);
+  },1000);
 });
-</script>
-<link rel="manifest" href="manifest.json">
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js')
-        .then(reg => console.log('Offline Protocol Active'))
-        .catch(err => console.log('Offline Protocol Failed', err));
-    });
-  }
 </script>
 </body>
 </html>
